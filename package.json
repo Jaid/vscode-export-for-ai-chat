@@ -1,7 +1,7 @@
 {
+  "name": "vscode-export-for-ai-chat",
   "version": "0.0.1",
   "type": "module",
-  "name": "vscode-export-for-ai-chat",
   "description": "Copies the current file’s content to the clipboard in a format that is suitable for pasting into an AI chat.",
   "keywords": [
     "code-extension",
@@ -24,8 +24,11 @@
     "type": "git",
     "url": "https://github.com/jaid/vscode-export-for-ai-chat"
   },
-  "engines": {
-    "vscode": "^1.81.0"
+  "main": "./extension.js",
+  "scripts": {
+    "build": "tsx src/workflows/build/build.ts",
+    "buildExtension": "tsx src/workflows/buildExtension/build.ts",
+    "buildHtml": "tsx src/workflows/buildHtml/build.ts"
   },
   "devDependencies": {
     "@actions/core": "^1.10.1",
@@ -53,11 +56,6 @@
     "wireit": "^0.14.4",
     "yaml": "^2.4.0"
   },
-  "scripts": {
-    "build": "tsx src/workflows/build/build.ts",
-    "buildExtension": "tsx src/workflows/buildExtension/build.ts",
-    "buildHtml": "tsx src/workflows/buildHtml/build.ts"
-  },
   "categories": [
     "Education",
     "Other"
@@ -76,5 +74,7 @@
       ]
     }
   },
-  "main": "./extension.js"
+  "engines": {
+    "vscode": "^1.81.0"
+  }
 }
