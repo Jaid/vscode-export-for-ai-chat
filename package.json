@@ -1,0 +1,80 @@
+{
+  "version": "0.0.1",
+  "type": "module",
+  "name": "vscode-export-for-ai-chat",
+  "description": "Copies the current file’s content to the clipboard in a format that is suitable for pasting into an AI chat.",
+  "keywords": [
+    "code-extension",
+    "extension",
+    "keybinding",
+    "keybindings",
+    "keymap",
+    "keymaps",
+    "reset",
+    "vsce",
+    "vscode",
+    "vscode-extension",
+    "vscode-keybindings",
+    "vsix"
+  ],
+  "author": "Jaid <jaid.jsx@gmail.com> (https://github.com/Jaid)",
+  "homepage": "https://github.com/Jaid/vscode-export-for-ai-chat",
+  "funding": "https://github.com/sponsors/jaid",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaid/vscode-export-for-ai-chat"
+  },
+  "engines": {
+    "vscode": "^1.81.0"
+  },
+  "devDependencies": {
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^5.1.1",
+    "@types/node": "^20.11.20",
+    "browserslist-config-jaid-universal": "^3.0.0",
+    "eslint": "^8.48.0",
+    "eslint-config-jaid": "^6.1.4",
+    "fs-extra": "^11.1.1",
+    "globby": "^13.2.2",
+    "handlebars": "^4.7.8",
+    "key-counter": "^1.0.4",
+    "lodash-es": "^4.17.21",
+    "prevent-start": "^1.0.5",
+    "read-file-json": "^1.1.0",
+    "read-file-string": "^1.1.2",
+    "read-file-yaml": "^2.0.0",
+    "showdown": "^2.1.0",
+    "super-regex": "^0.2.0",
+    "tsconfig-jaid": "^4.7.0",
+    "tsconfig-jaid-node": "^6.1.1",
+    "tsx": "^3.14.0",
+    "type-fest": "^4.3.1",
+    "typescript": "^5.3.3",
+    "wireit": "^0.14.4",
+    "yaml": "^2.3.2"
+  },
+  "scripts": {
+    "build": "tsx src/workflows/build/build.ts",
+    "buildExtension": "tsx src/workflows/buildExtension/build.ts",
+    "buildHtml": "tsx src/workflows/buildHtml/build.ts"
+  },
+  "categories": [
+    "Education",
+    "Other"
+  ],
+  "contributes": {
+    "commands": [{
+      "command": "export-for-ai-chat-copy.copyCode",
+      "title": "Copy as Markdown Code"
+    }],
+    "menus": {
+      "editor/context": [{
+          "command": "export-for-ai-chat-copy.copyCode",
+          "when": "editorTextFocus",
+          "group": "z_commands"
+        }
+      ]
+    }
+  },
+  "main": "./extension.js"
+}
