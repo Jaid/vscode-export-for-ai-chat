@@ -28,9 +28,10 @@
     "type": "git",
     "url": "https://github.com/jaid/vscode-export-for-ai-chat"
   },
-  "main": "./out/webpack/index.cjs",
+  "main": "./out/webpack/index.js",
   "scripts": {
-    "build": "tsc --inlineSourceMap && webpack"
+    "build": "tsc --inlineSourceMap && webpack",
+    "package": "npm run build && cp license.txt out/webpack && cd out/webpack && vsce package"
   },
   "dependencies": {
     "zeug": "jaid/zeug#tsc"
@@ -63,6 +64,9 @@
     "wireit": "^0.14.4",
     "yaml": "^2.4.0"
   },
+  "activationEvents": [
+    "onCommand"
+  ],
   "categories": [
     "Education",
     "Other"
@@ -71,8 +75,7 @@
     "commands": [
       {
         "command": "export-for-ai-chat.copyCode",
-        "title": "Copy for AI chat",
-        "category": ""
+        "title": "Copy for AI chat"
       }
     ],
     "menus": {
@@ -84,7 +87,8 @@
       ]
     }
   },
+  "displayName": "Export for AI chat",
   "engines": {
-    "vscode": "^1.81.0"
+    "vscode": "^1.85.0"
   }
 }

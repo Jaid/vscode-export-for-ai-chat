@@ -62,7 +62,7 @@ export const getChatPromptFromText = async (text?: string, options: Options["par
     context.languageId = mergedOptions.languageId
     context.language = getLanguageFromLanguageId(mergedOptions.languageId)
   }
-  const handlebarsTemplate = `{{#if code}}This is {{#if isWholeFile}}a {{/if}}{{#if language.title}}{{language.title}} code{{else}}code{{/if}} {{#if isWholeFile}}file {{/if}}from a project I am currently working on.\n\n{{codeOpener}}{{language.codeBlockId}}\n{{code}}\n{{codeCloser}}\n\nI am stuck and need your help with it.{{else}}I am stuck at a programming project I am currently working on and I need your help with it.{{/if}}I will ask you questions about it. Please answer in an extensive and teaching manner and provide useful tips and tricks where applicable.`
+  const handlebarsTemplate = `{{#if code}}This is {{#if isWholeFile}}a {{/if}}{{#if language.title}}{{language.title}} code{{else}}code{{/if}} {{#if isWholeFile}}file {{/if}}from a project I am currently working on.\n\n{{codeOpener}}{{language.codeBlockId}}\n{{code}}\n{{codeCloser}}\n\nI am stuck and need your help with it.{{else}}I am stuck at a programming project I am currently working on and I need your help with it.{{/if}} I will ask you questions about it. Please answer in an extensive and teaching manner and provide useful tips and tricks where applicable.`
   const markdownCode = resolveTemplate(handlebarsTemplate, context)
   if (mergedOptions.copyToClipboard) {
     await copyPrompt(markdownCode, {

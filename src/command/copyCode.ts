@@ -1,11 +1,16 @@
-import type * as vscode from 'vscode'
+import * as vscode from 'vscode'
 
-import {getChatPromptFromEditor} from '../getChatPrompt.js'
+import {getChatPromptFromEditor, getChatPromptFromText} from '../getChatPrompt.js'
 
 export const copyCode = async (contextFile?: vscode.Uri) => {
   if (!contextFile) {
     await getChatPromptFromEditor()
+    return
   }
-  // TODO Implement editor tab searching by contextFile
-  await getChatPromptFromEditor()
+  const matchingDocument = vscode.workspace.textDocuments.find(document => document.uri === contextFile)
+  if (!matchingDocument) {
+    await getChatPromptFromEditor()
+    return
+  }
+  await getChatPromptFromText(matchingDocument.getText())
 }
