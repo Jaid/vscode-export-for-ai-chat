@@ -24,11 +24,9 @@
     "type": "git",
     "url": "https://github.com/jaid/vscode-export-for-ai-chat"
   },
-  "main": "./extension.js",
+  "main": "./out/webpack/index.cjs",
   "scripts": {
-    "build": "tsx src/workflows/build/build.ts",
-    "buildExtension": "tsx src/workflows/buildExtension/build.ts",
-    "buildHtml": "tsx src/workflows/buildHtml/build.ts"
+    "build": "tsc --inlineSourceMap && webpack"
   },
   "dependencies": {
     "zeug": "jaid/zeug#tsc"
@@ -51,11 +49,13 @@
     "read-file-yaml": "^2.0.0",
     "showdown": "^2.1.0",
     "super-regex": "^0.3.0",
+    "ts-loader": "^9.5.1",
     "tsconfig-jaid": "^6.1.1",
     "tsconfig-jaid-node": "^6.1.1",
     "tsx": "^4.7.1",
     "type-fest": "^4.10.3",
     "typescript": "^5.3.3",
+    "webpack": "^5.90.3",
     "wireit": "^0.14.4",
     "yaml": "^2.4.0"
   },
@@ -64,15 +64,18 @@
     "Other"
   ],
   "contributes": {
-    "commands": [{
-      "command": "export-for-ai-chat-copy.copyCode",
-      "title": "Copy as Markdown Code"
-    }],
+    "commands": [
+      {
+        "command": "export-for-ai-chat.copyCode",
+        "title": "Copy for AI chat",
+        "category": ""
+      }
+    ],
     "menus": {
-      "editor/context": [{
-          "command": "export-for-ai-chat-copy.copyCode",
-          "when": "editorTextFocus",
-          "group": "z_commands"
+      "editor/context": [
+        {
+          "command": "export-for-ai-chat.copyCode",
+          "group": "9_cutcopypaste"
         }
       ]
     }
