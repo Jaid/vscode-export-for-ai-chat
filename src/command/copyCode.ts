@@ -12,5 +12,6 @@ export const copyCode = async (contextFile?: vscode.Uri) => {
     await getChatPromptFromEditor()
     return
   }
-  await getChatPromptFromText(matchingDocument.getText())
+  // TODO Check if editor has selection
+  await getChatPromptFromEditor()
 }
