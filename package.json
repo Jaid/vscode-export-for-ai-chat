@@ -1,5 +1,6 @@
 {
   "name": "vscode-export-for-ai-chat",
+  "displayName": "Export for AI chat",
   "version": "0.0.1",
   "type": "module",
   "description": "Copies the current file’s content to the clipboard in a format that is suitable for pasting into an AI chat.",
@@ -29,6 +30,29 @@
     "url": "https://github.com/jaid/vscode-export-for-ai-chat"
   },
   "main": "./out/webpack/index.js",
+  "activationEvents": [
+    "onCommand"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "export-for-ai-chat.copyCode",
+        "title": "Copy for AI chat"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "export-for-ai-chat.copyCode",
+          "group": "9_cutcopypaste"
+        }
+      ]
+    }
+  },
+  "categories": [
+    "Education",
+    "Other"
+  ],
   "scripts": {
     "build": "tsc --inlineSourceMap && webpack",
     "package": "npm run build && cp license.txt out/webpack && cd out/webpack && vsce package"
@@ -64,30 +88,6 @@
     "wireit": "^0.14.4",
     "yaml": "^2.4.0"
   },
-  "activationEvents": [
-    "onCommand"
-  ],
-  "categories": [
-    "Education",
-    "Other"
-  ],
-  "contributes": {
-    "commands": [
-      {
-        "command": "export-for-ai-chat.copyCode",
-        "title": "Copy for AI chat"
-      }
-    ],
-    "menus": {
-      "editor/context": [
-        {
-          "command": "export-for-ai-chat.copyCode",
-          "group": "9_cutcopypaste"
-        }
-      ]
-    }
-  },
-  "displayName": "Export for AI chat",
   "engines": {
     "vscode": "^1.85.0"
   }
