@@ -47,6 +47,18 @@
           "group": "9_cutcopypaste"
         }
       ]
+    },
+    "configuration": {
+      "title": "Export for AI chat",
+      "properties": {
+        "export-for-ai-chat.template": {
+          "type": "string",
+          "default": "{{#if code}}This is {{#if isWholeFile}}a {{/if}}{{#if language.title}}{{language.title}} code{{else}}code{{/if}} {{#if isWholeFile}}file {{/if}}from a project I am currently working on.\n\n{{codeOpener}}{{language.codeBlockId}}\n{{code}}\n{{codeCloser}}\n\nI am stuck and need your help with it.{{else}}I am stuck at a programming project I am currently working on and I need your help with it.{{/if}} I will ask you questions about it. Please answer in an extensive and teaching manner and provide in-depth knowledge and useful tips and tricks where applicable.",
+          "markdownDescription": "Handlebars template for the AI chat prompt. Available variables: `code`, `languageId`, `language.title`, `language.codeBlockId`, `isWholeFile`, `codeOpener`, `codeCloser`, `blankLine`, `newLine`",
+          "description": "Handlebars template for the AI chat prompt. Available variables: code, languageId, language.title, language.codeBlockId, isWholeFile, codeOpener, codeCloser, blankLine, newLine",
+          "editPresentation": "multilineText"
+        }
+      }
     }
   },
   "categories": [

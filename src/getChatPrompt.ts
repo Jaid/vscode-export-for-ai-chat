@@ -25,12 +25,14 @@ const defaultOptions = {
 }
 
 type Context = {
+  blankLine: `\n\n`
   code?: string
   codeCloser: string
   codeOpener: string
   isWholeFile: boolean
   language?: Language
   languageId?: string
+  newline: `\n`
 }
 
 export const copyPrompt = async (prompt: string, options: CopyOptions["parameter"] = {}) => {
@@ -57,12 +59,18 @@ export const getChatPromptFromText = async (text?: string, options: Options["par
     code: text ? text.trim() : undefined,
     codeCloser: `\`\`\``,
     codeOpener: `\`\`\``,
+    newline: `\n`,
+    blankLine: `\n\n`,
   }
   if (mergedOptions.languageId) {
     context.languageId = mergedOptions.languageId
     context.language = getLanguageFromLanguageId(mergedOptions.languageId)
   }
-  const handlebarsTemplate = `{{#if code}}This is {{#if isWholeFile}}a {{/if}}{{#if language.title}}{{language.title}} code{{else}}code{{/if}} {{#if isWholeFile}}file {{/if}}from a project I am currently working on.\n\n{{codeOpener}}{{language.codeBlockId}}\n{{code}}\n{{codeCloser}}\n\nI am stuck and need your help with it.{{else}}I am stuck at a programming project I am currently working on and I need your help with it.{{/if}} I will ask you questions about it. Please answer in an extensive and teaching manner and provide useful tips and tricks where applicable.`
+  const config = vscode.workspace.getConfiguration(`export-for-ai-chat`)
+  const handlebarsTemplate = config.get<string>(`template`)
+  if (!handlebarsTemplate) {
+    throw new Error(`No handlebars template found in the “export-for-ai-chat.template” setting.`)
+  }
   const markdownCode = resolveTemplate(handlebarsTemplate, context)
   if (mergedOptions.copyToClipboard) {
     await copyPrompt(markdownCode, {

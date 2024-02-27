@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 
-import {getChatPromptFromEditor, getChatPromptFromText} from '../getChatPrompt.js'
+import {getChatPromptFromEditor} from '../getChatPrompt.js'
 
 export const copyCode = async (contextFile?: vscode.Uri) => {
   if (!contextFile) {
