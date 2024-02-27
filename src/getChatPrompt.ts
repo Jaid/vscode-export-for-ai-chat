@@ -45,7 +45,11 @@ export const copyPrompt = async (prompt: string, options: CopyOptions["parameter
     ...mergedOptions.context,
     prompt,
   })
-  await vscode.window.showInformationMessage(logMessage)
+  const config = vscode.workspace.getConfiguration(`export-for-ai-chat`)
+  const showNotifications = config.get<boolean>(`showNotifications`)
+  if (showNotifications) {
+    await vscode.window.showInformationMessage(logMessage)
+  }
   outputChannel.appendLine(logMessage)
 }
 

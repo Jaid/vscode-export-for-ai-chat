@@ -57,6 +57,11 @@
           "markdownDescription": "Handlebars template for the AI chat prompt. Available variables: `code`, `languageId`, `language.title`, `language.codeBlockId`, `isWholeFile`, `codeOpener`, `codeCloser`, `blankLine`, `newLine`",
           "description": "Handlebars template for the AI chat prompt. Available variables: code, languageId, language.title, language.codeBlockId, isWholeFile, codeOpener, codeCloser, blankLine, newLine",
           "editPresentation": "multilineText"
+        },
+        "export-for-ai-chat.showNotifications": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show notifications after copying code to clipboard"
         }
       }
     }
