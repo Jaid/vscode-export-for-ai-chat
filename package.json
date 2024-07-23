@@ -102,7 +102,8 @@
     "type-fest": "^4.23.0",
     "typescript": "^5.5.4",
     "wireit": "^0.14.5",
-    "yaml": "^2.4.5"
+    "yaml": "^2.4.5",
+    "webpack": "^5.93.0"
   },
   "engines": {
     "vscode": "^1.85.0"
