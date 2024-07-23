@@ -96,7 +96,6 @@
     "showdown": "^2.1.0",
     "super-regex": "^0.3.0",
     "ts-loader": "^9.5.1",
-    "tsconfig-jaid": "^6.1.1",
     "tsconfig-jaid-node": "^6.1.1",
     "tsx": "^4.7.1",
     "type-fest": "^4.10.3",

@@ -3513,16 +3513,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsconfig-jaid@npm:^6.1.1":
-  version: 6.1.1
-  resolution: "tsconfig-jaid@npm:6.1.1"
-  dependencies:
-    type-fest: "npm:^4.3.2"
-    typescript: "npm:^5.2.2"
-  checksum: 10/2d44354b8482b8746329f8d154fa4d547ff8814b31ce8f3c316ac8630f86d7a9fada709766f21b192506d1551da90aadfe71486a4f34e764a24a915f127353e1
-  languageName: node
-  linkType: hard
-
 "tslib@npm:^2.3.1":
   version: 2.6.3
   resolution: "tslib@npm:2.6.3"
@@ -3738,7 +3728,6 @@ __metadata:
     showdown: "npm:^2.1.0"
     super-regex: "npm:^0.3.0"
     ts-loader: "npm:^9.5.1"
-    tsconfig-jaid: "npm:^6.1.1"
     tsconfig-jaid-node: "npm:^6.1.1"
     tsx: "npm:^4.7.1"
     type-fest: "npm:^4.10.3"
