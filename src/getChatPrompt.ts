@@ -1,5 +1,5 @@
 import type {Language} from './languageIds.js'
-import type {InputOptions} from 'zeug/types'
+import type {InputOptions} from 'more-types'
 
 import * as vscode from 'vscode'
 import {resolveTemplate} from 'zeug'
