@@ -93,6 +93,7 @@
     "read-file-json": "^1.1.0",
     "read-file-string": "^1.1.2",
     "read-file-yaml": "^2.0.0",
+    "rollup-config-factory": "^0.4.1",
     "showdown": "^2.1.0",
     "super-regex": "^0.3.0",
     "ts-loader": "^9.5.1",
