@@ -24,26 +24,6 @@ const defaultOptions = {
   copyToClipboard: true,
 }
 
-type Context = {
-  blankLine: `\n\n`
-  codeCloser: string
-  codeOpener: string
-  newline: `\n`
-  workspaceFolder?: string
-  workspaceFolderName?: string
-  items: {
-    code?: string
-    language?: Language
-    languageId?: string
-    isWholeFile: boolean
-    file?: string
-    fileRelative?: string
-    fileName?: string
-    folder?: string
-    folderRelative?: string
-    folderName?: string
-  }
-}
 
 export const copyPrompt = async (prompt: string, options: CopyOptions["parameter"] = {}) => {
   const mergedOptions: CopyOptions["merged"] = {
@@ -63,36 +43,7 @@ export const copyPrompt = async (prompt: string, options: CopyOptions["parameter
   outputChannel.appendLine(logMessage)
 }
 
-export const getChatPromptFromText = async (text?: string, options: Options["parameter"] = {}) => {
-  const mergedOptions: Options["merged"] = {
-    ...defaultOptions,
-    ...options,
-  }
-  const context: Context = {
-    isWholeFile: mergedOptions.isWholeFile,
-    code: text ? text.trim() : undefined,
-    codeCloser: `\`\`\``,
-    codeOpener: `\`\`\``,
-    newline: `\n`,
-    blankLine: `\n\n`,
-  }
-  if (mergedOptions.languageId) {
-    context.languageId = mergedOptions.languageId
-    context.language = getLanguageFromLanguageId(mergedOptions.languageId)
-  }
-  const config = vscode.workspace.getConfiguration(`export-for-ai-chat`)
-  const handlebarsTemplate = config.get<string>(`template`)
-  if (!handlebarsTemplate) {
-    throw new Error(`No handlebars template found in the “export-for-ai-chat.template” setting.`)
-  }
-  const markdownCode = renderHandlebars(handlebarsTemplate, context)
-  if (mergedOptions.copyToClipboard) {
-    await copyPrompt(markdownCode, {
-      context,
-    })
-  }
-  return markdownCode
-}
+
 
 export const getChatPromptFromEditor = async (editor?: vscode.TextEditor, options: Options["parameter"] = {}) => {
   const selectedEditor = editor ?? vscode.window.activeTextEditor
