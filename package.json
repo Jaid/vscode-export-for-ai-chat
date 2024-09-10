@@ -38,12 +38,22 @@
       {
         "command": "export-for-ai-chat.copyCode",
         "title": "Copy for AI chat"
+      },
+      {
+        "command": "export-for-ai-chat.copyFile",
+        "title": "Copy file for AI chat"
       }
     ],
     "menus": {
       "editor/context": [
         {
           "command": "export-for-ai-chat.copyCode",
+          "group": "9_cutcopypaste"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "export-for-ai-chat.copyFile",
           "group": "9_cutcopypaste"
         }
       ]

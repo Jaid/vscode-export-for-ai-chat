@@ -2,7 +2,7 @@ import type {Language} from './languageIds.js'
 import type {InputOptions} from 'more-types'
 
 import * as vscode from 'vscode'
-import {resolveTemplate} from 'zeug'
+import {renderHandlebars} from 'zeug'
 
 import {getLanguageFromLanguageId} from './languageIds.js'
 import {outputChannel} from './outputChannel.js'
@@ -26,13 +26,23 @@ const defaultOptions = {
 
 type Context = {
   blankLine: `\n\n`
-  code?: string
   codeCloser: string
   codeOpener: string
-  isWholeFile: boolean
-  language?: Language
-  languageId?: string
   newline: `\n`
+  workspaceFolder?: string
+  workspaceFolderName?: string
+  items: {
+    code?: string
+    language?: Language
+    languageId?: string
+    isWholeFile: boolean
+    file?: string
+    fileRelative?: string
+    fileName?: string
+    folder?: string
+    folderRelative?: string
+    folderName?: string
+  }
 }
 
 export const copyPrompt = async (prompt: string, options: CopyOptions["parameter"] = {}) => {
@@ -41,7 +51,7 @@ export const copyPrompt = async (prompt: string, options: CopyOptions["parameter
   }
   await vscode.env.clipboard.writeText(prompt)
   const logMessageTemplate = `Copied {{#if language.title}}{{language.title}} code{{else}}text{{/if}} for AI chat ({{#if code}}{{code.length}} code characters, {{/if}}{{prompt.length}} total characters).`
-  const logMessage = resolveTemplate(logMessageTemplate, {
+  const logMessage = renderHandlebars(logMessageTemplate, {
     ...mergedOptions.context,
     prompt,
   })
@@ -75,7 +85,7 @@ export const getChatPromptFromText = async (text?: string, options: Options["par
   if (!handlebarsTemplate) {
     throw new Error(`No handlebars template found in the “export-for-ai-chat.template” setting.`)
   }
-  const markdownCode = resolveTemplate(handlebarsTemplate, context)
+  const markdownCode = renderHandlebars(handlebarsTemplate, context)
   if (mergedOptions.copyToClipboard) {
     await copyPrompt(markdownCode, {
       context,
