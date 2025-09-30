@@ -3,13 +3,14 @@
   "configurations": [
     {
       "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}"
+        "--extensionDevelopmentPath=${workspaceFolder}",
+        "${workspaceFolder}/private/test_project"
       ],
       "name": "Launch Extension",
       "outFiles": [
         "${workspaceFolder}/out/webpack/**/*"
       ],
-      "preLaunchTask": "npm run: build",
+      "preLaunchTask": "bun: build",
       "request": "launch",
       "type": "extensionHost"
     }
