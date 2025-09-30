@@ -99,6 +99,7 @@
     "handlebars": "^4.7.8",
     "key-counter": "^1.0.4",
     "lodash-es": "^4.17.21",
+    "more-types": "^0.6.0",
     "prevent-start": "^1.0.5",
     "read-file-json": "^1.1.0",
     "read-file-string": "^1.1.2",
