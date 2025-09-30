@@ -1,31 +1,33 @@
-import type {InputOptions} from 'more-types'
-import {getLanguageFromLanguageId} from './languageIds.js'
-import {renderHandlebars} from 'zeug'
 import type {Language} from './languageIds.js'
-import * as vscode from 'vscode'
+import type {InputOptions} from 'more-types'
 import type {Arrayable, Promisable} from 'type-fest'
 
+import * as vscode from 'vscode'
+import {renderHandlebars} from 'zeug'
+
+import {getLanguageFromLanguageId} from './languageIds.js'
+
 type Context = {
-  blankLine: `\n\n`
+  blankLine: '\n\n'
   codeCloser: string
   codeOpener: string
-  newline: `\n`
-  workspaceFolder?: string
-  workspaceFolderName?: string
-  workspaceName: string
   hasMultiple: boolean
   items: Array<{
     code?: string
+    file?: string
+    fileName?: string
+    fileRelative?: string
+    folder?: string
+    folderName?: string
+    folderRelative?: string
+    isWholeFile: boolean
     language?: Language
     languageId?: string
-    isWholeFile: boolean
-    file?: string
-    fileRelative?: string
-    fileName?: string
-    folder?: string
-    folderRelative?: string
-    folderName?: string
   }>
+  newline: '\n'
+  workspaceFolder?: string
+  workspaceFolderName?: string
+  workspaceName: string
 }
 
 type Options = InputOptions<{
@@ -47,20 +49,20 @@ type FileInputItem = {
   uri: vscode.Uri
 }
 
-type InputItem  = (TextInputItem | FileInputItem | EditorInputItem) & {
+type InputItem = (EditorInputItem | FileInputItem | TextInputItem) & {
   languageId?: string
 }
 
-export const renderPrompt = async (items: Arrayable<InputItem>, options: Options["parameter"] = {}) => {
+export const renderPrompt = async (items: Arrayable<InputItem>, options: Options['parameter'] = {}) => {
   items = Array.isArray(items) ? items : [items]
-  const mergedOptions: Options["merged"] = {
+  const mergedOptions: Options['merged'] = {
     ...options,
   }
   const context: Context = {
-    codeCloser: `\`\`\``,
-    codeOpener: `\`\`\``,
-    newline: `\n`,
-    blankLine: `\n\n`,
+    codeCloser: '```',
+    codeOpener: '```',
+    newline: '\n',
+    blankLine: '\n\n',
     // TODO
   }
   // if (mergedOptions.languageId) {
@@ -71,10 +73,10 @@ export const renderPrompt = async (items: Arrayable<InputItem>, options: Options
     const modifiedContext = await mergedOptions.modifyContext(context)
     Object.assign(context, modifiedContext)
   }
-  const config = vscode.workspace.getConfiguration(`export-for-ai-chat`)
-  const handlebarsTemplate = config.get<string>(`template`)
+  const config = vscode.workspace.getConfiguration('export-for-ai-chat')
+  const handlebarsTemplate = config.get<string>('template')
   if (!handlebarsTemplate) {
-    throw new Error(`No handlebars template found in the “export-for-ai-chat.template” setting.`)
+    throw new Error('No handlebars template found in the “export-for-ai-chat.template” setting.')
   }
   const markdownCode = renderHandlebars(handlebarsTemplate, context)
   return markdownCode

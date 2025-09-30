@@ -24,33 +24,30 @@ const defaultOptions = {
   copyToClipboard: true,
 }
 
-
-export const copyPrompt = async (prompt: string, options: CopyOptions["parameter"] = {}) => {
-  const mergedOptions: CopyOptions["merged"] = {
+export const copyPrompt = async (prompt: string, options: CopyOptions['parameter'] = {}) => {
+  const mergedOptions: CopyOptions['merged'] = {
     ...options,
   }
   await vscode.env.clipboard.writeText(prompt)
-  const logMessageTemplate = `Copied {{#if language.title}}{{language.title}} code{{else}}text{{/if}} for AI chat ({{#if code}}{{code.length}} code characters, {{/if}}{{prompt.length}} total characters).`
+  const logMessageTemplate = 'Copied {{#if language.title}}{{language.title}} code{{else}}text{{/if}} for AI chat ({{#if code}}{{code.length}} code characters, {{/if}}{{prompt.length}} total characters).'
   const logMessage = renderHandlebars(logMessageTemplate, {
     ...mergedOptions.context,
     prompt,
   })
-  const config = vscode.workspace.getConfiguration(`export-for-ai-chat`)
-  const showNotifications = config.get<boolean>(`showNotifications`)
+  const config = vscode.workspace.getConfiguration('export-for-ai-chat')
+  const showNotifications = config.get<boolean>('showNotifications')
   if (showNotifications) {
     await vscode.window.showInformationMessage(logMessage)
   }
   outputChannel.appendLine(logMessage)
 }
 
-
-
-export const getChatPromptFromEditor = async (editor?: vscode.TextEditor, options: Options["parameter"] = {}) => {
+export const getChatPromptFromEditor = async (editor?: vscode.TextEditor, options: Options['parameter'] = {}) => {
   const selectedEditor = editor ?? vscode.window.activeTextEditor
   let text: string | undefined
-  let isWholeFile = defaultOptions.isWholeFile
+  let {isWholeFile} = defaultOptions
   if (selectedEditor) {
-    const selection = selectedEditor.selection
+    const {selection} = selectedEditor
     const documentRange = selectedEditor.document.validateRange(new vscode.Range(0, 0, Number.MAX_VALUE, Number.MAX_VALUE))
     isWholeFile = selection.isEmpty || selection.isEqual(documentRange)
     text = selectedEditor.document.getText(isWholeFile ? undefined : selection)

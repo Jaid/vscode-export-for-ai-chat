@@ -8339,67 +8339,67 @@ export type Language = {
 // The keys of this map are VSCode language ids
 // The values are markdown code block language IDs as listed in the long comment above (extensions)
 const map: Record<string, Language | string> = {
-  typescript: `TypeScript`,
-  javascript: `JavaScript`,
-  json: `JSON`,
+  typescript: 'TypeScript',
+  javascript: 'JavaScript',
+  json: 'JSON',
   jsonc: {
-    title: `JSON with Comments`,
-    codeBlockId: `JSONC`,
+    title: 'JSON with Comments',
+    codeBlockId: 'JSONC',
   },
-  yaml: `YAML`,
-  xml: `XML`,
+  yaml: 'YAML',
+  xml: 'XML',
   typescriptreact: {
-    title: `TypeScript React`,
-    codeBlockId: `TSX`,
+    title: 'TypeScript React',
+    codeBlockId: 'TSX',
   },
-  ahk: `AutoHotkey`,
+  ahk: 'AutoHotkey',
   ahk2: {
-    title: `AutoHotkey v2`,
-    codeBlockId: `AutoHotkey`, // unfortunately no language id for AutoHotkey v2
+    title: 'AutoHotkey v2',
+    codeBlockId: 'AutoHotkey', // unfortunately no language id for AutoHotkey v2
   },
   bat: {
-    title: `Windows Batch`,
-    codeBlockId: `Winbatch`,
+    title: 'Windows Batch',
+    codeBlockId: 'Winbatch',
   },
   dockercompose: {
-    title: `Docker Compose`,
-    codeBlockId: `YAML`,
+    title: 'Docker Compose',
+    codeBlockId: 'YAML',
   },
-  css: `CSS`,
-  dockerfile: `Dockerfile`,
-  go: `Go`,
-  handlebars: `Handlebars`,
-  ini: `INI`,
-  properties: `INI`,
-  java: `Java`,
-  "jsx-tags": `JSX`,
-  less: `Less`,
+  css: 'CSS',
+  dockerfile: 'Dockerfile',
+  go: 'Go',
+  handlebars: 'Handlebars',
+  ini: 'INI',
+  properties: 'INI',
+  java: 'Java',
+  'jsx-tags': 'JSX',
+  less: 'Less',
   jsonl: {
-    title: `JSON Lines`,
-    codeBlockId: `JSON`,
+    title: 'JSON Lines',
+    codeBlockId: 'JSON',
   },
-  lua: `Lua`,
-  perl: `Perl`,
-  powershell: `PowerShell`,
-  python: `Python`,
-  r: `R`,
-  ruby: `Ruby`,
-  shellscript: `Bash`,
-  "github-actions-workflow": {
-    title: `GitHub Actions Workflow`,
-    codeBlockId: `YAML`,
+  lua: 'Lua',
+  perl: 'Perl',
+  powershell: 'PowerShell',
+  python: 'Python',
+  r: 'R',
+  ruby: 'Ruby',
+  shellscript: 'Bash',
+  'github-actions-workflow': {
+    title: 'GitHub Actions Workflow',
+    codeBlockId: 'YAML',
   },
   caddyfile: {
-    title: `Caddyfile`,
+    title: 'Caddyfile',
   },
-  json5: `JSON5`,
-  toml: `TOML`,
-  jinja: `Jinja`,
+  json5: 'JSON5',
+  toml: 'TOML',
+  jinja: 'Jinja',
   ssh_config: {
-    title: `SSH Config`,
-    codeBlockId: `INI`,
+    title: 'SSH Config',
+    codeBlockId: 'INI',
   },
-  sass: `Sass`,
+  sass: 'Sass',
 }
 
 export const getLanguageFromLanguageId = (languageId: string) => {
@@ -8407,7 +8407,7 @@ export const getLanguageFromLanguageId = (languageId: string) => {
   if (language === undefined) {
     return
   }
-  if (typeof language === `string`) {
+  if (typeof language === 'string') {
     return {
       title: language,
       codeBlockId: language,
