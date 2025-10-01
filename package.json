@@ -90,10 +90,10 @@
   ],
   "scripts": {
     "build": "fse emptyDir out/bun && bun x/build.ts",
-    "build_test": "fse emptyDir out/test && bun build ./test/code/*.test.ts --outdir out/test --target node --format cjs  --entry-naming '[name].cjs' --external mocha --external vscode",
+    "build_test": "fse emptyDir out/test && bun build ./test/code/*.ts --outdir out/test --target node --format cjs  --entry-naming [name].test.cjs --external mocha --external vscode",
     "clean": "fse remove out && fse remove temp && fse remove .vscode-test",
     "pack": "fse emptyDir out/vsix && bun run build && cp license.txt out/bun && cd out/bun && vsce package --out ../vsix/$npm_package_name-v$npm_package_version.vsix",
-    "test": "bun run build && bun run build_test && vscode-test"
+    "test": "bun test ./test && bun run build && bun run build_test && vscode-test"
   },
   "dependencies": {
     "zeug": "^2.1.0"

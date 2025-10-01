@@ -34,7 +34,8 @@ export const copyPromptToClipboard = async (prompt: string, context: Context) =>
   const config = vscode.workspace.getConfiguration('export-for-ai-chat')
   const showNotifications = config.get<boolean>('showNotifications')
   if (showNotifications) {
-    await vscode.window.showInformationMessage(logMessage)
+    // Don't await - let the notification show without blocking
+    vscode.window.showInformationMessage(logMessage)
   }
   outputChannel.appendLine(logMessage)
 }
