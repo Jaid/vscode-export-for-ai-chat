@@ -30,9 +30,6 @@
     "url": "https://github.com/jaid/vscode-export-for-ai-chat"
   },
   "main": "./out/webpack/index.js",
-  "activationEvents": [
-    "onCommand"
-  ],
   "contributes": {
     "commands": [
       {
