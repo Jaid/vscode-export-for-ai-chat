@@ -1,10 +1,9 @@
-import type {Language} from './languageIds.js'
 import type {InputOptions} from 'more-types'
+import type {Context} from 'src/renderPrompt.js'
 
 import * as vscode from 'vscode'
 import {renderHandlebars} from 'zeug'
 
-import {getLanguageFromLanguageId} from './languageIds.js'
 import {outputChannel} from './outputChannel.js'
 
 type Options = InputOptions<{

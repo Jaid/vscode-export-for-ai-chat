@@ -8331,6 +8331,8 @@
 //   ace_mode: text
 //   language_id: 421
 
+import type {Dict} from 'more-types'
+
 export type Language = {
   codeBlockId?: string
   title: string
@@ -8338,7 +8340,7 @@ export type Language = {
 
 // The keys of this map are VSCode language ids
 // The values are markdown code block language IDs as listed in the long comment above (extensions)
-const map: Record<string, Language | string> = {
+const map: Dict<Language | string> = {
   typescript: 'TypeScript',
   javascript: 'JavaScript',
   json: 'JSON',
@@ -8402,9 +8404,9 @@ const map: Record<string, Language | string> = {
   sass: 'Sass',
 }
 
-export const getLanguageFromLanguageId = (languageId: string) => {
+export const getLanguageFromLanguageId = (languageId: keyof typeof map) => {
   const language = map[languageId]
-  if (language === undefined) {
+  if (!language) {
     return
   }
   if (typeof language === 'string') {
