@@ -1,12 +1,13 @@
+import type {Language} from './languageIds.js'
 import type {InputOptions} from 'more-types'
 import type {Arrayable, Promisable} from 'type-fest'
 
 import * as vscode from 'vscode'
 import {renderHandlebars} from 'zeug'
 
-import {getLanguageFromLanguageId, type Language} from './languageIds.js'
+import {getLanguageFromLanguageId} from './languageIds.js'
 
-export type Context = {
+type Context = {
   blankLine: '\n\n'
   codeCloser: string
   codeOpener: string
@@ -64,10 +65,10 @@ export const renderPrompt = async (items: Arrayable<InputItem>, options: Options
     blankLine: '\n\n',
     // TODO
   }
-  if (mergedOptions.languageId) {
-    context.languageId = mergedOptions.languageId
-    context.language = getLanguageFromLanguageId(mergedOptions.languageId)
-  }
+  // if (mergedOptions.languageId) {
+  //   context.languageId = mergedOptions.languageId
+  //   context.language = getLanguageFromLanguageId(mergedOptions.languageId)
+  // }
   if (mergedOptions.modifyContext) {
     const modifiedContext = await mergedOptions.modifyContext(context)
     Object.assign(context, modifiedContext)
