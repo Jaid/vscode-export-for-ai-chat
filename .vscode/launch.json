@@ -17,11 +17,12 @@
       "type": "extensionHost",
       "request": "launch",
       "args": [
+        "--disable-extensions",
         "--extensionDevelopmentPath=${workspaceFolder}/out/bun",
         "--extensionTestsPath=${workspaceFolder}/out/test/extension.test.js",
         "${workspaceFolder}/private/test_project"
       ],
-      "preLaunchTask": "bun: build"
+      "preLaunchTask": "bun: build_test"
     }
   ]
 }
