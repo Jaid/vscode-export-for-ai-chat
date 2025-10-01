@@ -11,7 +11,7 @@ class EmitPackageJsonPlugin {
   }
   apply(compiler) {
     compiler.hooks.emit.tap('EmitPackageJsonPlugin', compilation => {
-      const relevantPackage = lodash.pick(this.packageJson, ['repository', 'homepage', 'version', 'description', 'engines', 'categories', 'displayName', 'contributes', 'activationEvents'])
+      const relevantPackage = lodash.pick(this.packageJson, ['repository', 'homepage', 'version', 'description', 'engines', 'categories', 'displayName', 'contributes', 'activationEvents', 'extensionKind'])
       const id = this.packageJson.name.replace(/^vscode-/, '')
       const outPackage = {
         ...relevantPackage,
