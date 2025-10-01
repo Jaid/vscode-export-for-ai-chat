@@ -30,7 +30,9 @@
     "url": "https://github.com/jaid/vscode-export-for-ai-chat"
   },
   "main": "./out/webpack/index.js",
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand"
+  ],
   "contributes": {
     "commands": [
       {
@@ -40,10 +42,6 @@
       {
         "command": "export-for-ai-chat.copyFile",
         "title": "Copy file for AI chat"
-      },
-      {
-        "command": "export-for-ai-chat.copyFolder",
-        "title": "Copy folder for AI chat"
       }
     ],
     "menus": {
@@ -56,13 +54,7 @@
       "explorer/context": [
         {
           "command": "export-for-ai-chat.copyFile",
-          "group": "9_cutcopypaste",
-          "when": "explorerResourceIsFolder == false"
-        },
-        {
-          "command": "export-for-ai-chat.copyFolder",
-          "group": "9_cutcopypaste",
-          "when": "explorerResourceIsFolder"
+          "group": "9_cutcopypaste"
         }
       ]
     },
@@ -90,7 +82,7 @@
   ],
   "scripts": {
     "build": "tsc --inlineSourceMap && webpack",
-    "package": "bun run build && cp license.txt out/webpack && cd out/webpack && vsce package"
+    "package": "npm run build && cp license.txt out/webpack && cd out/webpack && vsce package"
   },
   "dependencies": {
     "zeug": "^2.1.0"
