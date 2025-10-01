@@ -18,7 +18,7 @@
       "request": "launch",
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}/out/bun",
-        "--extensionTestsPath=${workspaceFolder}/temp/test_environment/test/extension.test.js",
+        "--extensionTestsPath=${workspaceFolder}/out/test/extension.test.js",
         "${workspaceFolder}/private/test_project"
       ],
       "preLaunchTask": "bun: build"

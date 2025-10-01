@@ -61,3 +61,6 @@ package-lock.json
 
 # ESLint
 .eslintcache
+
+# https://npmjs.com/package/@vscode/test-cli
+.vscode-test/

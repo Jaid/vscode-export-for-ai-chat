@@ -90,10 +90,10 @@
   ],
   "scripts": {
     "build": "fse emptyDir out/bun && bun x/build.ts",
-    "build_test": "fse emptyDir temp/test_environment/test && bun build ./test/code/index.ts ./test/code/extension.test.ts --outdir temp/test_environment/test --target node --external vscode",
+    "build_test": "fse emptyDir out/test && bun build ./test/code/index.ts ./test/code/extension.test.ts --outdir out/test --target node --external vscode",
     "clean": "fse remove out && fse remove temp && fse remove .vscode-test",
     "pack": "fse emptyDir out/vsix && bun run build && cp license.txt out/bun && cd out/bun && vsce package --out ../vsix/$npm_package_name-v$npm_package_version.vsix",
-    "test": "bun run build && bun run build_test && fse ensureDir temp && cd temp && vscode-test"
+    "test": "bun run build && bun run build_test && vscode-test"
   },
   "dependencies": {
     "zeug": "^2.1.0"
