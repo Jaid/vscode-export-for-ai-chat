@@ -82,7 +82,7 @@
   ],
   "scripts": {
     "build": "tsc --inlineSourceMap && webpack",
-    "package": "npm run build && cp license.txt out/webpack && cd out/webpack && vsce package"
+    "package": "bun run build && cp license.txt out/webpack && cd out/webpack && vsce package"
   },
   "dependencies": {
     "zeug": "^2.1.0"
