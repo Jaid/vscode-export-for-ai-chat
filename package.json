@@ -91,7 +91,7 @@
   "scripts": {
     "build": "bun x/build.ts",
     "package": "fse emptyDir out/bun && fse emptyDir out/vsix && bun run build && cp license.txt out/bun && cd out/bun && vsce package --out ../vsix/$npm_package_name-v$npm_package_version.vsix",
-    "test": "bun test ./test"
+    "test": "bun run build && vscode-test"
   },
   "dependencies": {
     "zeug": "^2.1.0"
@@ -100,6 +100,11 @@
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.1",
     "@types/bun": "^1.2.23",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^24.6.1",
+    "@types/vscode": "^1.104.0",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2",
     "browserslist-config-jaid-universal": "^3.0.0",
     "eslint": "^9.36.0",
     "eslint-config-jaid": "^15.0.0",
@@ -108,6 +113,7 @@
     "handlebars": "^4.7.8",
     "key-counter": "^1.0.4",
     "lodash-es": "^4.17.21",
+    "mocha": "^11.7.3",
     "more-types": "^0.6.0",
     "prevent-start": "^1.0.5",
     "read-file-json": "^1.1.0",
