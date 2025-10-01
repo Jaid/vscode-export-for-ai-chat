@@ -91,7 +91,7 @@
   "scripts": {
     "build": "fse emptyDir out/bun && bun x/build.ts",
     "package": "fse emptyDir out/vsix && bun run build && cp license.txt out/bun && cd out/bun && vsce package --out ../vsix/$npm_package_name-v$npm_package_version.vsix",
-    "test": "bun run build && fse ensureDir temp && cd temp && vscode-test"
+    "test": "BUILD_WITH_TESTS=1 bun run build && fse ensureDir temp && cd temp && vscode-test"
   },
   "dependencies": {
     "zeug": "^2.1.0"

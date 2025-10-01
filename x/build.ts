@@ -45,13 +45,17 @@ await Bun.build({
   target: 'node',
   external: ['vscode'],
   plugins: [emitPackageJsonPlugin],
+  minify: true,
+  sourcemap: 'external',
 })
-await Bun.build({
-  entrypoints: [
-    path.join(rootFolder, 'test', 'index.ts'),
-    path.join(rootFolder, 'test', 'main.test.ts'),
-  ],
-  outdir: path.join(rootFolder, 'out', 'bun', 'test'),
-  target: 'node',
-  external: ['vscode', 'mocha'],
-})
+if (process.env.BUILD_WITH_TESTS) {
+  await Bun.build({
+    entrypoints: [
+      path.join(rootFolder, 'test', 'index.ts'),
+      path.join(rootFolder, 'test', 'main.test.ts'),
+    ],
+    outdir: path.join(rootFolder, 'out', 'bun', 'test'),
+    target: 'node',
+    external: ['vscode', 'mocha'],
+  })
+}
