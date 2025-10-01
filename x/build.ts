@@ -31,11 +31,11 @@ const emitPackageJsonPlugin: BunPlugin = {
       const outPackage = {
         ...relevantPackage,
         name: id,
-        main: 'index.js',
+        main: 'extension.js',
         publisher: 'jaidchen',
       }
-      const outPath = path.join(rootFolder, 'out', 'bun', 'package.json')
-      await Bun.write(outPath, JSON.stringify(outPackage))
+      const packageJsonFile = path.join(rootFolder, 'out', 'bun', 'package.json')
+      await Bun.write(packageJsonFile, JSON.stringify(outPackage))
     })
   },
 }
@@ -44,21 +44,5 @@ await Bun.build({
   outdir: path.join(rootFolder, 'out', 'bun'),
   target: 'node',
   external: ['vscode'],
-  naming: {
-    entry: '[dir]/index.js',
-  },
   plugins: [emitPackageJsonPlugin],
 })
-// Build test files
-// await Bun.build({
-//   entrypoints: [
-//     path.join(rootFolder, 'test', 'index.ts'),
-//     path.join(rootFolder, 'test', 'main.test.ts'),
-//   ],
-//   outdir: path.join(rootFolder, 'out', 'bun', 'test'),
-//   target: 'node',
-//   external: ['vscode', 'mocha'],
-//   naming: {
-//     entry: '[dir]/[name].js',
-//   },
-// })
