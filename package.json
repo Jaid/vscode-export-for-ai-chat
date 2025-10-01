@@ -29,7 +29,7 @@
     "type": "git",
     "url": "https://github.com/jaid/vscode-export-for-ai-chat"
   },
-  "main": "out/bun/index.js",
+  "main": "out/bun/extension.js",
   "activationEvents": [],
   "contributes": {
     "commands": [
