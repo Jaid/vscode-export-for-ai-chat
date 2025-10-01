@@ -13,8 +13,8 @@ const buildContext = async (items: Array<{editor?: vscode.TextEditor
   const workspaceName = workspaceFolder?.name ?? 'Unknown'
   return {
     blankLine: '\n\n',
-    codeCloser: '```',
-    codeOpener: '```',
+    codeCloser: '`' + '`' + '`',
+    codeOpener: '`' + '`' + '`',
     hasMultiple: items.length > 1,
     items: [],
     newline: '\n',

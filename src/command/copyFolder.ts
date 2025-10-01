@@ -41,8 +41,8 @@ export const copyFolder = async (folderUri: vscode.Uri) => {
     }))
     const context: Context = {
       blankLine: '\n\n',
-      codeCloser: '```',
-      codeOpener: '```',
+      codeCloser: '`' + '`' + '`',
+      codeOpener: '`' + '`' + '`',
       hasMultiple: items.length > 1,
       items,
       newline: '\n',

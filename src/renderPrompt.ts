@@ -104,8 +104,8 @@ export const renderPrompt = async (items: Arrayable<InputItem>, options: Options
   const workspaceFolder = workspaceFolders?.[0]
   const workspaceName = workspaceFolder?.name ?? 'Unknown'
   const context: Context = {
-    codeCloser: '```',
-    codeOpener: '```',
+    codeCloser: '`' + '`' + '`',
+    codeOpener: '`' + '`' + '`',
     newline: '\n',
     blankLine: '\n\n',
     hasMultiple: processedItems.length > 1,
