@@ -18,7 +18,7 @@
       "request": "launch",
       "args": [
         "--disable-extensions",
-        "--extensionDevelopmentPath=${workspaceFolder}",
+        "--extensionDevelopmentPath=${workspaceFolder}/out/bun",
         "--extensionTestsPath=${workspaceFolder}/out/test/index.js",
         "${workspaceFolder}/private/test_project"
       ],
