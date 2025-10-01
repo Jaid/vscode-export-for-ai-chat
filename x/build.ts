@@ -43,7 +43,6 @@ await Bun.build({
   entrypoints: [path.join(rootFolder, 'src', 'extension.ts')],
   outdir: path.join(rootFolder, 'out', 'bun'),
   target: 'node',
-  minify: true,
   external: ['vscode'],
   naming: {
     entry: '[dir]/index.js',
@@ -51,15 +50,15 @@ await Bun.build({
   plugins: [emitPackageJsonPlugin],
 })
 // Build test files
-await Bun.build({
-  entrypoints: [
-    path.join(rootFolder, 'test', 'index.ts'),
-    path.join(rootFolder, 'test', 'main.test.ts'),
-  ],
-  outdir: path.join(rootFolder, 'out', 'bun', 'test'),
-  target: 'node',
-  external: ['vscode', 'mocha'],
-  naming: {
-    entry: '[dir]/[name].js',
-  },
-})
+// await Bun.build({
+//   entrypoints: [
+//     path.join(rootFolder, 'test', 'index.ts'),
+//     path.join(rootFolder, 'test', 'main.test.ts'),
+//   ],
+//   outdir: path.join(rootFolder, 'out', 'bun', 'test'),
+//   target: 'node',
+//   external: ['vscode', 'mocha'],
+//   naming: {
+//     entry: '[dir]/[name].js',
+//   },
+// })
