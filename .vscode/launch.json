@@ -4,7 +4,7 @@
     {
       "args": [
         "--disable-extensions",
-        "--extensionDevelopmentPath=${workspaceFolder}",
+        "--extensionDevelopmentPath=${workspaceFolder}/out/bun",
         "${workspaceFolder}/private/test_project"
       ],
       "name": "Launch Extension",
@@ -19,7 +19,7 @@
       "args": [
         "--disable-extensions",
         "--extensionDevelopmentPath=${workspaceFolder}/out/bun",
-        "--extensionTestsPath=${workspaceFolder}/out/test/index.js",
+        "--extensionTestsPath=${workspaceFolder}/out/test/*.test.cjs",
         "${workspaceFolder}/private/test_project"
       ],
       "preLaunchTask": "bun: build_test"
