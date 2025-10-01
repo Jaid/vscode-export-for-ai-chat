@@ -8,9 +8,6 @@
         "${workspaceFolder}/private/test_project"
       ],
       "name": "Launch Extension",
-      "outFiles": [
-        "${workspaceFolder}/out/bun/**/*"
-      ],
       "preLaunchTask": "bun: build",
       "request": "launch",
       "type": "extensionHost"
@@ -21,11 +18,8 @@
       "request": "launch",
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}/out/bun",
-        "--extensionTestsPath=${workspaceFolder}/out/bun/test/main.test",
+        "--extensionTestsPath=${workspaceFolder}/temp/test_environment/test/extension.test.js",
         "${workspaceFolder}/private/test_project"
-      ],
-      "outFiles": [
-        "${workspaceFolder}/out/bun/**/*"
       ],
       "preLaunchTask": "bun: build"
     }
