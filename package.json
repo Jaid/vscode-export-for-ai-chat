@@ -29,7 +29,7 @@
     "type": "git",
     "url": "https://github.com/jaid/vscode-export-for-ai-chat"
   },
-  "main": "./out/webpack/index.js",
+  "main": "out/bun/index.js",
   "activationEvents": [],
   "contributes": {
     "commands": [
@@ -89,8 +89,8 @@
     "Other"
   ],
   "scripts": {
-    "build": "tsc --inlineSourceMap && webpack",
-    "package": "bun run build && cp license.txt out/webpack && cd out/webpack && vsce package"
+    "build": "bun x/build.ts",
+    "package": "fse emptyDir out/bun && fse emptyDir out/vsix && bun run build && cp license.txt out/bun && cd out/bun && vsce package --out ../vsix/$npm_package_name-v$npm_package_version.vsix"
   },
   "dependencies": {
     "zeug": "^2.1.0"
@@ -112,14 +112,11 @@
     "read-file-json": "^1.1.0",
     "read-file-string": "^1.1.2",
     "read-file-yaml": "^2.0.0",
-    "rollup-config-factory": "^0.4.2",
     "showdown": "^2.1.0",
     "super-regex": "^1.0.0",
-    "ts-loader": "^9.5.4",
     "tsconfig-jaid-node": "^8.1.0",
     "type-fest": "^5.0.1",
     "typescript": "5.9.3",
-    "webpack": "^5.102.0",
     "yaml": "^2.8.1"
   },
   "engines": {

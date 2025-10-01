@@ -9,7 +9,7 @@
       ],
       "name": "Launch Extension",
       "outFiles": [
-        "${workspaceFolder}/out/webpack/**/*"
+        "${workspaceFolder}/out/bun/**/*"
       ],
       "preLaunchTask": "bun: build",
       "request": "launch",
