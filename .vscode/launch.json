@@ -18,8 +18,8 @@
       "request": "launch",
       "args": [
         "--disable-extensions",
-        "--extensionDevelopmentPath=${workspaceFolder}/out/bun",
-        "--extensionTestsPath=${workspaceFolder}/out/test/extension.test.js",
+        "--extensionDevelopmentPath=${workspaceFolder}",
+        "--extensionTestsPath=${workspaceFolder}/out/test/index.js",
         "${workspaceFolder}/private/test_project"
       ],
       "preLaunchTask": "bun: build_test"

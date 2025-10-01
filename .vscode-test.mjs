@@ -3,7 +3,7 @@ import * as path from 'forward-slash-path'
 
 export default defineConfig({
   files: 'out/test/*.js',
-  extensionDevelopmentPath: path.join(import.meta.dirname, 'out/bun'),
+  extensionDevelopmentPath: import.meta.dirname,
   workspaceFolder: path.join(import.meta.dirname, 'private/test_project'),
   launchArgs: ['--disable-extensions'],
   mocha: {

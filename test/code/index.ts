@@ -7,7 +7,7 @@ export async function run(): Promise<void> {
   })
   return new Promise((resolve, reject) => {
     try {
-      mocha.addFile(path.join(import.meta.dirname, 'main.test.js'))
+      mocha.addFile(path.join(import.meta.dirname, 'extension.test.js'))
       mocha.run(failures => {
         if (failures > 0) {
           reject(new Error(`${failures} tests failed.`))
