@@ -1,5 +1,3 @@
-import {fileURLToPath} from 'node:url'
-
 import * as path from 'forward-slash-path'
 import fs from 'fs-extra'
 import * as lodash from 'lodash-es'
@@ -32,7 +30,6 @@ class EmitPackageJsonPlugin {
 
 const pkg = await fs.readJson(`package.json`)
 
-const dirName = path.dirname(fileURLToPath(import.meta.url))
 /**
  * @type {import('webpack').Configuration}
  */
@@ -41,7 +38,7 @@ const extensionConfig = {
   mode: `none`,
   entry: `./out/ts/src/extension.js`,
   output: {
-    path: path.resolve(dirName, `out/webpack`),
+    path: path.resolve(import.meta.dirname, `out/webpack`),
     filename: `index.js`,
     libraryTarget: `commonjs2`,
   },
