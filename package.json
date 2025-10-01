@@ -62,7 +62,7 @@
         {
           "command": "export-for-ai-chat.copyFolder",
           "group": "9_cutcopypaste",
-          "when": "explorerResourceIsFolder == true"
+          "when": "explorerResourceIsFolder"
         }
       ]
     },
@@ -90,6 +90,7 @@
   ],
   "scripts": {
     "build": "fse emptyDir out/bun && bun x/build.ts",
+    "clean": "fse remove out && fse remove temp && fse remove .vscode-test",
     "package": "fse emptyDir out/vsix && bun run build && cp license.txt out/bun && cd out/bun && vsce package --out ../vsix/$npm_package_name-v$npm_package_version.vsix",
     "test": "BUILD_WITH_TESTS=1 bun run build && fse ensureDir temp && cd temp && vscode-test"
   },
@@ -99,6 +100,7 @@
   "devDependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.1",
+    "@atao60/fse-cli": "^0.1.9",
     "@types/bun": "^1.2.23",
     "@types/mocha": "^10.0.10",
     "@types/node": "^24.6.1",
