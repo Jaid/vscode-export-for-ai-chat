@@ -1,37 +1,34 @@
-import type {Language} from './languageIds.js'
-import type {InputOptions} from 'more-types'
+import type {Context} from './renderPrompt.js'
 
 import * as vscode from 'vscode'
 import {renderHandlebars} from 'zeug'
 
-import {getLanguageFromLanguageId} from './languageIds.js'
 import {outputChannel} from './outputChannel.js'
+import {renderPrompt} from './renderPrompt.js'
 
-type Options = InputOptions<{
-  defaultsType: typeof defaultOptions
-  optionalOptions: {
-    languageId: string
+const buildContext = async (items: Array<{editor?: vscode.TextEditor
+  uri?: vscode.Uri}>): Promise<Context> => {
+  const {workspaceFolders} = vscode.workspace
+  const workspaceFolder = workspaceFolders?.[0]
+  const workspaceName = workspaceFolder?.name ?? 'Unknown'
+  return {
+    blankLine: '\n\n',
+    codeCloser: '```',
+    codeOpener: '```',
+    hasMultiple: items.length > 1,
+    items: [],
+    newline: '\n',
+    workspaceFolder: workspaceFolder?.uri.fsPath,
+    workspaceFolderName: workspaceFolder?.name,
+    workspaceName,
   }
-}>
-type CopyOptions = InputOptions<{
-  optionalOptions: {
-    context: Context
-  }
-}>
-
-const defaultOptions = {
-  isWholeFile: false,
-  copyToClipboard: true,
 }
 
-export const copyPrompt = async (prompt: string, options: CopyOptions['parameter'] = {}) => {
-  const mergedOptions: CopyOptions['merged'] = {
-    ...options,
-  }
+export const copyPromptToClipboard = async (prompt: string, context: Context) => {
   await vscode.env.clipboard.writeText(prompt)
-  const logMessageTemplate = 'Copied {{#if language.title}}{{language.title}} code{{else}}text{{/if}} for AI chat ({{#if code}}{{code.length}} code characters, {{/if}}{{prompt.length}} total characters).'
+  const logMessageTemplate = 'Copied {{#if hasMultiple}}{{items.length}} items{{else}}{{#if items.[0].language.title}}{{items.[0].language.title}} code{{else}}text{{/if}}{{/if}} for AI chat ({{prompt.length}} total characters).'
   const logMessage = renderHandlebars(logMessageTemplate, {
-    ...mergedOptions.context,
+    ...context,
     prompt,
   })
   const config = vscode.workspace.getConfiguration('export-for-ai-chat')
@@ -42,19 +39,13 @@ export const copyPrompt = async (prompt: string, options: CopyOptions['parameter
   outputChannel.appendLine(logMessage)
 }
 
-export const getChatPromptFromEditor = async (editor?: vscode.TextEditor, options: Options['parameter'] = {}) => {
+export const getChatPromptFromEditor = async (editor?: vscode.TextEditor) => {
   const selectedEditor = editor ?? vscode.window.activeTextEditor
-  let text: string | undefined
-  let {isWholeFile} = defaultOptions
-  if (selectedEditor) {
-    const {selection} = selectedEditor
-    const documentRange = selectedEditor.document.validateRange(new vscode.Range(0, 0, Number.MAX_VALUE, Number.MAX_VALUE))
-    isWholeFile = selection.isEmpty || selection.isEqual(documentRange)
-    text = selectedEditor.document.getText(isWholeFile ? undefined : selection)
+  if (!selectedEditor) {
+    vscode.window.showErrorMessage('No active editor found')
+    return
   }
-  return getChatPromptFromText(text, {
-    isWholeFile,
-    languageId: selectedEditor ? selectedEditor.document.languageId : undefined,
-    ...options,
-  })
+  const prompt = await renderPrompt({editor: selectedEditor})
+  const context = await buildContext([{editor: selectedEditor}])
+  await copyPromptToClipboard(prompt, context)
 }

@@ -1,4 +1,5 @@
 import type {PackageJson} from 'type-fest'
+import type webpack from 'webpack'
 
 import * as path from 'forward-slash-path'
 import fs from 'fs-extra'
@@ -9,7 +10,7 @@ class EmitPackageJsonPlugin {
   constructor(packageJson: PackageJson) {
     this.packageJson = packageJson
   }
-  apply(compiler) {
+  apply(compiler: webpack.Compiler) {
     compiler.hooks.emit.tap('EmitPackageJsonPlugin', compilation => {
       const relevantPackage = lodash.pick(this.packageJson, ['repository', 'homepage', 'version', 'description', 'engines', 'categories', 'displayName', 'contributes', 'activationEvents', 'extensionKind'])
       const id = this.packageJson.name!.replace(/^vscode-/, '')
@@ -23,14 +24,19 @@ class EmitPackageJsonPlugin {
         publisher: 'jaidchen',
       }
       const content = JSON.stringify(outPackage)
-      compilation.assets['package.json'] = {
-        source: () => content,
+      type Asset = {
+        size: () => number
+        source: () => string
+      }
+      const assets = compilation.assets as Record<string, Asset>
+      assets['package.json'] = {
         size: () => content.length,
+        source: () => content,
       }
     })
   }
 }
-const packageJson = await fs.readJson('package.json')
+const packageJson = await fs.readJson('package.json') as PackageJson
 /**
  * @type {import('webpack').Configuration}
  */

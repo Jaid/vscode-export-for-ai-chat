@@ -30,12 +30,7 @@
     "url": "https://github.com/jaid/vscode-export-for-ai-chat"
   },
   "main": "./out/webpack/index.js",
-  "extensionKind": [
-    "ui"
-  ],
-  "activationEvents": [
-    "onCommand"
-  ],
+  "activationEvents": [],
   "contributes": {
     "commands": [
       {
@@ -76,9 +71,9 @@
       "properties": {
         "export-for-ai-chat.template": {
           "type": "string",
-          "default": "{{#if code}}This is {{#if isWholeFile}}a {{/if}}{{#if language.title}}{{language.title}} code{{else}}code{{/if}} {{#if isWholeFile}}file {{/if}}from a project I am currently working on.\n\n{{codeOpener}}{{language.codeBlockId}}\n{{code}}\n{{codeCloser}}\n\nI am stuck and need your help with it.{{else}}I am stuck at a programming project I am currently working on and I need your help with it.{{/if}} I will ask you questions about it. Please answer in an extensive and teaching manner and provide in-depth knowledge and useful tips and tricks where applicable.",
-          "markdownDescription": "Handlebars template for the AI chat prompt. Available variables: `code`, `languageId`, `language.title`, `language.codeBlockId`, `isWholeFile`, `codeOpener`, `codeCloser`, `blankLine`, `newLine`",
-          "description": "Handlebars template for the AI chat prompt. Available variables: code, languageId, language.title, language.codeBlockId, isWholeFile, codeOpener, codeCloser, blankLine, newLine",
+          "default": "{{#if hasMultiple}}Here are {{items.length}} files from a project I am currently working on:{{blankLine}}{{#each items}}{{#if fileRelative}}File: `{{fileRelative}}`{{blankLine}}{{/if}}{{#if code}}{{codeOpener}}{{#if language.codeBlockId}}{{language.codeBlockId}}{{else}}{{languageId}}{{/if}}{{newline}}{{code}}{{newline}}{{codeCloser}}{{/if}}{{#unless @last}}{{blankLine}}{{/unless}}{{/each}}{{else}}{{#with items.[0]}}{{#if code}}This is {{#if isWholeFile}}a {{/if}}{{#if language.title}}{{language.title}} code{{else}}code{{/if}} {{#if isWholeFile}}file {{/if}}from a project I am currently working on.{{blankLine}}{{#if fileRelative}}File: `{{fileRelative}}`{{blankLine}}{{/if}}{{codeOpener}}{{#if language.codeBlockId}}{{language.codeBlockId}}{{else}}{{languageId}}{{/if}}{{newline}}{{code}}{{newline}}{{codeCloser}}{{blankLine}}I am stuck and need your help with it.{{else}}I am stuck at a programming project I am currently working on and I need your help with it.{{/if}}{{/with}}{{/if}}{{blankLine}}I will ask you questions about it. Please answer in a comprehensive and teaching manner and provide in-depth knowledge and useful tips and tricks where applicable.",
+          "markdownDescription": "Handlebars template for the AI chat prompt. Available variables: `items` (array), `hasMultiple`, `workspaceName`, `codeOpener`, `codeCloser`, `blankLine`, `newline`. Each item has: `code`, `languageId`, `language.title`, `language.codeBlockId`, `isWholeFile`, `file`, `fileName`, `fileRelative`",
+          "description": "Handlebars template for the AI chat prompt. Available variables: items (array), hasMultiple, workspaceName, codeOpener, codeCloser, blankLine, newline. Each item has: code, languageId, language.title, language.codeBlockId, isWholeFile, file, fileName, fileRelative",
           "editPresentation": "multilineText"
         },
         "export-for-ai-chat.showNotifications": {
