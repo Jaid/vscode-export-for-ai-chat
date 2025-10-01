@@ -17,6 +17,7 @@ class EmitPackageJsonPlugin {
       const outPackage = {
         ...relevantPackage,
         name: id,
+        type: 'module',
         main: 'index.js',
         engines: {
           vscode: '^1.85.0',
@@ -37,22 +38,22 @@ class EmitPackageJsonPlugin {
   }
 }
 const packageJson = await fs.readJson('package.json') as PackageJson
-/**
- * @type {import('webpack').Configuration}
- */
-const extensionConfig = {
+const extensionConfig: webpack.Configuration = {
   target: 'node',
   mode: 'none',
   entry: './out/ts/src/extension.js',
   output: {
     path: path.resolve(import.meta.dirname, 'out/webpack'),
     filename: 'index.js',
-    libraryTarget: 'commonjs2',
+    libraryTarget: 'module',
   },
   externals: {
-    vscode: 'commonjs vscode',
+    vscode: 'module vscode',
   },
   devtool: 'inline-source-map',
   plugins: [new EmitPackageJsonPlugin(packageJson)],
+  experiments: {
+    outputModule: true,
+  },
 }
 export default extensionConfig
