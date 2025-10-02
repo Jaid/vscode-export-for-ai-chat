@@ -3,11 +3,11 @@
 ./{{fileRelative}}
 {{@root/blankLine}}
 {{/if}}
-{{@root/codeOpener}}{{#if language.codeBlockId}}{{language.codeBlockId}}{{else}}{{languageId}}{{/if}}
+{{fenceFor code}}{{#if language.codeBlockId}}{{language.codeBlockId}}{{else}}{{languageId}}{{/if}}
 {{@root/newline}}
-{{trim (escapeFences code)}}
+{{trim code}}
 {{@root/newline}}
-{{@root/codeCloser}}
+{{fenceFor code}}
 {{#unless @last}}
 {{@root/blankLine}}
 {{/unless}}
