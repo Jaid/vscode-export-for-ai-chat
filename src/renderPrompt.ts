@@ -22,7 +22,7 @@ const handlebars = makeHandlebarsWithHelpers({
     return input.replaceAll(/^```/gm, '\\```')
   },
   fence: (code?: string) => {
-    const codeNormalized = code?.replaceAll('\r', '\n') ?? ''
+    const codeNormalized = (code ?? '').replaceAll('\r', '\n')
     const isSafe = (fence: string) => {
       if (codeNormalized.startsWith(fence)) {
         return false
