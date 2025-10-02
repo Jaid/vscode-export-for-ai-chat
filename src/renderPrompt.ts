@@ -44,7 +44,7 @@ const handlebars = makeHandlebarsWithHelpers({
 
 export const renderPrompt = async (contextOrItems: Arrayable<InputItem> | Context, options: Options['parameter'] = {}) => {
   let context: Context
-  if ('items' in contextOrItems && 'hasMultiple' in contextOrItems) {
+  if ('items' in contextOrItems) {
     context = contextOrItems
   } else {
     context = await makeContext(contextOrItems, options)

@@ -22,9 +22,6 @@ type ContextItem = {
 
 export type Context = {
   blankLine: '\n\n'
-  codeCloser: string
-  codeOpener: string
-  hasMultiple: boolean
   items: Array<ContextItem>
   newline: '\n'
   workspaceFolder?: string
@@ -124,11 +121,8 @@ export const makeContext = async (items: Arrayable<InputItem>, options: Options[
   const workspaceFolder = workspaceFolders?.[0]
   const workspaceName = workspaceFolder?.name ?? 'Unknown'
   const context: Context = {
-    codeCloser: '`' + '`' + '`',
-    codeOpener: '`' + '`' + '`',
     newline: '\n',
     blankLine: '\n\n',
-    hasMultiple: processedItems.length > 1,
     items: processedItems,
     workspaceFolder: workspaceFolder?.uri.fsPath,
     workspaceFolderName: workspaceFolder?.name,

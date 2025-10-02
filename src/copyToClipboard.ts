@@ -9,7 +9,7 @@ import {renderPrompt} from 'src/renderPrompt.js'
 
 export const copyPromptToClipboard = async (prompt: string, context: Context) => {
   await vscode.env.clipboard.writeText(prompt)
-  const logMessageTemplate = 'Copied {{#if hasMultiple}}{{items.length}} items{{else}}{{#if items.[0].language.title}}{{items.[0].language.title}} code{{else}}text{{/if}}{{/if}} for AI chat ({{prompt.length}} total characters).'
+  const logMessageTemplate = 'Copied {{items.length}} item{{#if items.[1]}}s{{/if}} for AI chat ({{prompt.length}} total characters).'
   const logMessage = renderHandlebars(logMessageTemplate, {
     ...context,
     prompt,
