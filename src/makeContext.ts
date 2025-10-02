@@ -66,11 +66,12 @@ const makeCommonItem = async (inputItem: InputItem): Promise<CommonItem> => {
   if ('editor' in inputItem) {
     const {editor} = inputItem
     const {selection, document: editorDocument} = editor
+    const isWholeFile = selection.isEmpty
     return {
-      text: editorDocument.getText(selection),
+      text: isWholeFile ? editorDocument.getText() : editorDocument.getText(selection),
       languageId: editorDocument.languageId,
       uri: editorDocument.uri,
-      isWholeFile: selection.isEmpty,
+      isWholeFile,
     }
   }
   if ('uri' in inputItem) {
