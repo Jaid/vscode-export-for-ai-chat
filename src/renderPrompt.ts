@@ -2,7 +2,7 @@ import type {InputOptions} from 'more-types'
 import type {Arrayable, Promisable} from 'type-fest'
 
 import * as vscode from 'vscode'
-import {makeHandlebarsRenderer, renderHandlebars} from 'zeug'
+import {renderHandlebars} from 'zeug'
 
 import {type Context, type InputItem, makeContext} from './makeContext.js'
 
@@ -34,11 +34,18 @@ export const renderPrompt = async (contextOrItems: Arrayable<InputItem> | Contex
     escapeFences: (input: string) => {
       return input.replaceAll(/^```/gm, '\\```')
     },
-    fenceFor: (code: string) => {
+    fence: (code: string) => {
       if (/(^|\n)```/.test(code)) {
         return '````'
       }
       return '```'
+    },
+    isMultiple: (input: {length?: number}) => {
+      if (!Object.hasOwn(input, 'length')) {
+        return false
+      }
+      const length = input.length ?? 0
+      return length > 1
     },
   })
   return markdownCode
