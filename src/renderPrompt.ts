@@ -22,13 +22,24 @@ const handlebars = makeHandlebarsWithHelpers({
     return input.replaceAll(/^```/gm, '\\```')
   },
   fence: (code?: string) => {
-    if (!code) {
-      return '```'
+    const codeNormalized = code?.replaceAll('\r', '\n') ?? ''
+    const isSafe = (fence: string) => {
+      if (codeNormalized.startsWith(fence)) {
+        return false
+      }
+      if (codeNormalized.includes(`\n${fence}`)) {
+        return false
+      }
+      return true
     }
-    if (/(^|\n)```/.test(code)) {
-      return '````'
+    while (true) {
+      let currentLength = 3
+      const fence = '`'.repeat(currentLength)
+      if (isSafe(fence) || currentLength === 8) {
+        return fence
+      }
+      currentLength++
     }
-    return '```'
   },
   isMultiple: (input: {length?: number}) => {
     if (!Object.hasOwn(input, 'length')) {
