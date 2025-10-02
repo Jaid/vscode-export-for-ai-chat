@@ -1,13 +1,12 @@
 import * as assert from 'node:assert'
 import * as path from 'node:path'
 
-import {suite, test} from 'mocha'
 import * as vscode from 'vscode'
 
-suite('Functionality', () => {
+describe('Functionality', () => {
   let extension: vscode.Extension<any> | undefined
   const testTimeout = 10_000
-  test('should activate extension before functional tests', async function () {
+  it('should activate extension before functional tests', async function () {
     this.timeout(testTimeout)
     extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
     if (!extension) {
@@ -16,7 +15,7 @@ suite('Functionality', () => {
     await extension.activate()
     assert.strictEqual(extension.isActive, true)
   })
-  test('copyCode command should copy whole file to clipboard', async function () {
+  it('copyCode command should copy whole file to clipboard', async function () {
     this.timeout(testTimeout)
     const {workspaceFolders} = vscode.workspace
     assert.ok(workspaceFolders && workspaceFolders.length > 0, 'Workspace should be open')
@@ -37,7 +36,7 @@ suite('Functionality', () => {
     assert.ok(clipboardContent.includes('export default') || clipboardContent.includes('hi'), 'Clipboard should contain the file content')
     assert.ok(clipboardContent.includes('JavaScript') || clipboardContent.includes('javascript'), 'Should mention the language')
   })
-  test('copyCode command should copy selected text only', async function () {
+  it('copyCode command should copy selected text only', async function () {
     this.timeout(testTimeout)
     const {workspaceFolders} = vscode.workspace
     assert.ok(workspaceFolders && workspaceFolders.length > 0, 'Workspace should be open')
@@ -54,7 +53,7 @@ suite('Functionality', () => {
     const clipboardContent = await vscode.env.clipboard.readText()
     assert.ok(clipboardContent.includes('export'), 'Clipboard should contain selected text')
   })
-  test('copyFile command should copy file content', async function () {
+  it('copyFile command should copy file content', async function () {
     this.timeout(testTimeout)
     const {workspaceFolders} = vscode.workspace
     assert.ok(workspaceFolders && workspaceFolders.length > 0, 'Workspace should be open')
@@ -67,7 +66,7 @@ suite('Functionality', () => {
     assert.ok(clipboardContent.includes('export default') || clipboardContent.includes('hi'), 'Clipboard should contain the file content')
     assert.ok(clipboardContent.includes('a/test.js') || clipboardContent.includes('a\\test.js') || clipboardContent.includes('test.js'), 'Clipboard should contain file path')
   })
-  test('copyFile command should work for folders', async function () {
+  it('copyFile command should work for folders', async function () {
     this.timeout(testTimeout)
     const {workspaceFolders} = vscode.workspace
     assert.ok(workspaceFolders && workspaceFolders.length > 0, 'Workspace should be open')
@@ -80,7 +79,7 @@ suite('Functionality', () => {
     assert.ok(clipboardContent.includes('export default') || clipboardContent.includes('hi'), 'Clipboard should contain the file content')
     assert.ok(clipboardContent.includes('test.js'), 'Clipboard should reference the file')
   })
-  test('clipboard should contain proper markdown formatting', async function () {
+  it('clipboard should contain proper markdown formatting', async function () {
     this.timeout(testTimeout)
     const {workspaceFolders} = vscode.workspace
     assert.ok(workspaceFolders && workspaceFolders.length > 0, 'Workspace should be open')
@@ -96,7 +95,7 @@ suite('Functionality', () => {
     assert.strictEqual(codeBlockCount % 2, 0, 'Code blocks should be properly closed')
     assert.ok(clipboardContent.includes('javascript') || clipboardContent.includes('js'), 'Should include language identifier')
   })
-  test('should handle multiple files in folder', async function () {
+  it('should handle multiple files in folder', async function () {
     this.timeout(testTimeout)
     const {workspaceFolders} = vscode.workspace
     assert.ok(workspaceFolders && workspaceFolders.length > 0, 'Workspace should be open')
@@ -109,7 +108,7 @@ suite('Functionality', () => {
       assert.ok(true, 'Indicates multiple files were copied')
     }
   })
-  test('configuration should affect output', async function () {
+  it('configuration should affect output', async function () {
     this.timeout(testTimeout)
     const config = vscode.workspace.getConfiguration('export-for-ai-chat')
     const originalShowNotifications = config.get<boolean>('showNotifications')

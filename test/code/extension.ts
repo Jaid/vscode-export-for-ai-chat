@@ -1,14 +1,13 @@
 import * as assert from 'node:assert'
 
-import {suite, test} from 'mocha'
 import * as vscode from 'vscode'
 
-suite('Extension', () => {
-  test('should be present', () => {
+describe('Extension', () => {
+  it('should be present', () => {
     const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
     assert.ok(extension, 'Extension should be installed')
   })
-  test('should activate', async () => {
+  it('should activate', async () => {
     const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
     if (!extension) {
       throw new Error('Extension not found')
@@ -16,7 +15,7 @@ suite('Extension', () => {
     await extension.activate()
     assert.strictEqual(extension.isActive, true, 'Extension should be active')
   })
-  test('should have correct package metadata', () => {
+  it('should have correct package metadata', () => {
     const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
     assert.ok(extension, 'Extension should be installed')
     assert.strictEqual(extension.packageJSON.displayName, 'Export for AI chat')
@@ -24,9 +23,9 @@ suite('Extension', () => {
     assert.ok(extension.packageJSON.description, 'Should have a description')
   })
 })
-suite('Commands', () => {
+describe('Commands', () => {
   let extension: vscode.Extension<any> | undefined
-  test('should register copyCode command', async () => {
+  it('should register copyCode command', async () => {
     extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
     if (!extension) {
       throw new Error('Extension not found')
@@ -35,11 +34,11 @@ suite('Commands', () => {
     const commands = await vscode.commands.getCommands(true)
     assert.ok(commands.includes('export-for-ai-chat.copyCode'), 'copyCode command should be registered')
   })
-  test('should register copyFile command', async () => {
+  it('should register copyFile command', async () => {
     const commands = await vscode.commands.getCommands(true)
     assert.ok(commands.includes('export-for-ai-chat.copyFile'), 'copyFile command should be registered')
   })
-  test('should have both commands in package.json contributes', () => {
+  it('should have both commands in package.json contributes', () => {
     extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
     if (!extension) {
       throw new Error('Extension not found')
@@ -52,20 +51,20 @@ suite('Commands', () => {
     assert.ok(commandIds.has('export-for-ai-chat.copyFile'), 'Should include copyFile')
   })
 })
-suite('Configuration', () => {
-  test('should have template configuration', () => {
+describe('Configuration', () => {
+  it('should have template configuration', () => {
     const config = vscode.workspace.getConfiguration('export-for-ai-chat')
     const template = config.get<string>('template')
     assert.ok(template, 'Template configuration should exist')
     assert.ok(template.length > 0, 'Template should not be empty')
     assert.ok(template.includes('{{'), 'Template should contain Handlebars syntax')
   })
-  test('should have showNotifications configuration', () => {
+  it('should have showNotifications configuration', () => {
     const config = vscode.workspace.getConfiguration('export-for-ai-chat')
     const showNotifications = config.get<boolean>('showNotifications')
     assert.strictEqual(typeof showNotifications, 'boolean', 'showNotifications should be a boolean')
   })
-  test('should have correct default value for showNotifications', () => {
+  it('should have correct default value for showNotifications', () => {
     const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
     if (!extension) {
       throw new Error('Extension not found')
@@ -73,7 +72,7 @@ suite('Configuration', () => {
     const configDefaults = extension.packageJSON.contributes.configuration.properties
     assert.strictEqual(configDefaults['export-for-ai-chat.showNotifications'].default, true, 'showNotifications should default to true')
   })
-  test('should have configuration properties defined in package.json', () => {
+  it('should have configuration properties defined in package.json', () => {
     const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
     if (!extension) {
       throw new Error('Extension not found')
@@ -85,7 +84,7 @@ suite('Configuration', () => {
     assert.ok(properties['export-for-ai-chat.template'], 'Should have template property')
     assert.ok(properties['export-for-ai-chat.showNotifications'], 'Should have showNotifications property')
   })
-  test('template configuration should have correct type', () => {
+  it('template configuration should have correct type', () => {
     const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
     if (!extension) {
       throw new Error('Extension not found')
@@ -93,7 +92,7 @@ suite('Configuration', () => {
     const {properties} = extension.packageJSON.contributes.configuration
     assert.strictEqual(properties['export-for-ai-chat.template'].type, 'string', 'Template should be a string type')
   })
-  test('showNotifications configuration should have correct type', () => {
+  it('showNotifications configuration should have correct type', () => {
     const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
     if (!extension) {
       throw new Error('Extension not found')
@@ -102,8 +101,8 @@ suite('Configuration', () => {
     assert.strictEqual(properties['export-for-ai-chat.showNotifications'].type, 'boolean', 'showNotifications should be a boolean type')
   })
 })
-suite('Menus', () => {
-  test('should have editor context menu contribution', () => {
+describe('Menus', () => {
+  it('should have editor context menu contribution', () => {
     const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
     if (!extension) {
       throw new Error('Extension not found')
@@ -116,7 +115,7 @@ suite('Menus', () => {
     assert.ok(copyCodeMenu, 'Should have copyCode in editor context menu')
     assert.strictEqual(copyCodeMenu.group, '9_cutcopypaste', 'Should be in copy/paste group')
   })
-  test('should have explorer context menu contribution', () => {
+  it('should have explorer context menu contribution', () => {
     const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
     if (!extension) {
       throw new Error('Extension not found')
@@ -130,8 +129,8 @@ suite('Menus', () => {
     assert.strictEqual(copyFileMenu.group, '9_cutcopypaste', 'copyFile should be in copy/paste group')
   })
 })
-suite('Categories', () => {
-  test('should have correct categories', () => {
+describe('Categories', () => {
+  it('should have correct categories', () => {
     const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
     if (!extension) {
       throw new Error('Extension not found')
@@ -142,8 +141,8 @@ suite('Categories', () => {
     assert.ok(categories.includes('Other'), 'Should include Other category')
   })
 })
-suite('Engines', () => {
-  test('should specify minimum VS Code version', () => {
+describe('Engines', () => {
+  it('should specify minimum VS Code version', () => {
     const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
     if (!extension) {
       throw new Error('Extension not found')
