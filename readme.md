@@ -15,6 +15,7 @@ A Handlebars template can be [configured](vscode://settings/export-for-ai-chat.t
 ### Examples
 
 #### Simple
+
 ```hbs
 {{code}}
 ```
@@ -24,6 +25,7 @@ A Handlebars template can be [configured](vscode://settings/export-for-ai-chat.t
 > Using the `items[]` properties as top-level parameters works in general, but don't forget it may lead to missing content for multi-item exports.
 
 #### Markdown with file names, code fences and language indicators
+
 ```hbs
 {{#each items}}
 File: {{fileRelative}}
@@ -34,6 +36,7 @@ File: {{fileRelative}}
 ```
 
 ### XML
+
 ```hbs
 {{#each items}}
 <attached-file path='{{fileRelative}}'{{#if language.title}} language='{{language.title}}'{{/if}}>
@@ -42,6 +45,7 @@ File: {{fileRelative}}
 {{/each}}
 ```
 ### JSON
+
 ```hbs
 {{#if isMultiple items}}
 {{json items 2}}
