@@ -5,7 +5,7 @@
 {{/if}}
 {{@root/codeOpener}}{{#if language.codeBlockId}}{{language.codeBlockId}}{{else}}{{languageId}}{{/if}}
 {{@root/newline}}
-{{trim code}}
+{{trim (escapeFences code)}}
 {{@root/newline}}
 {{@root/codeCloser}}
 {{#unless @last}}

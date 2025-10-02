@@ -31,6 +31,9 @@ export const renderPrompt = async (contextOrItems: Arrayable<InputItem> | Contex
     trim: input => {
       return String(input).trim()
     },
+    escapeFences: (input: string) => {
+      return input.replaceAll(/^```/gm, '\\```')
+    },
   })
   return markdownCode
 }
