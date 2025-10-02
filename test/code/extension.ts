@@ -39,22 +39,17 @@ suite('Commands', () => {
     const commands = await vscode.commands.getCommands(true)
     assert.ok(commands.includes('export-for-ai-chat.copyFile'), 'copyFile command should be registered')
   })
-  test('should register copyFolder command', async () => {
-    const commands = await vscode.commands.getCommands(true)
-    assert.ok(commands.includes('export-for-ai-chat.copyFolder'), 'copyFolder command should be registered')
-  })
-  test('should have all three commands in package.json contributes', () => {
+  test('should have both commands in package.json contributes', () => {
     extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
     if (!extension) {
       throw new Error('Extension not found')
     }
     const {contributes} = extension.packageJSON
     assert.ok(contributes.commands, 'Should have commands in contributes')
-    assert.strictEqual(contributes.commands.length, 3, 'Should have exactly 3 commands')
+    assert.strictEqual(contributes.commands.length, 2, 'Should have exactly 2 commands')
     const commandIds = new Set(contributes.commands.map((cmd: any) => cmd.command))
     assert.ok(commandIds.has('export-for-ai-chat.copyCode'), 'Should include copyCode')
     assert.ok(commandIds.has('export-for-ai-chat.copyFile'), 'Should include copyFile')
-    assert.ok(commandIds.has('export-for-ai-chat.copyFolder'), 'Should include copyFolder')
   })
 })
 suite('Configuration', () => {
@@ -121,7 +116,7 @@ suite('Menus', () => {
     assert.ok(copyCodeMenu, 'Should have copyCode in editor context menu')
     assert.strictEqual(copyCodeMenu.group, '9_cutcopypaste', 'Should be in copy/paste group')
   })
-  test('should have explorer context menu contributions', () => {
+  test('should have explorer context menu contribution', () => {
     const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
     if (!extension) {
       throw new Error('Extension not found')
@@ -129,13 +124,10 @@ suite('Menus', () => {
     const {contributes} = extension.packageJSON
     assert.ok(contributes.menus['explorer/context'], 'Should have explorer/context menu')
     const explorerMenu = contributes.menus['explorer/context']
-    assert.strictEqual(explorerMenu.length, 2, 'Should have 2 items in explorer context menu')
+    assert.strictEqual(explorerMenu.length, 1, 'Should have 1 item in explorer context menu')
     const copyFileMenu = explorerMenu.find((m: any) => m.command === 'export-for-ai-chat.copyFile')
     assert.ok(copyFileMenu, 'Should have copyFile in explorer context menu')
-    assert.strictEqual(copyFileMenu.when, 'explorerResourceIsFolder == false', 'copyFile should only show for files')
-    const copyFolderMenu = explorerMenu.find((m: any) => m.command === 'export-for-ai-chat.copyFolder')
-    assert.ok(copyFolderMenu, 'Should have copyFolder in explorer context menu')
-    assert.strictEqual(copyFolderMenu.when, 'explorerResourceIsFolder', 'copyFolder should only show for folders')
+    assert.strictEqual(copyFileMenu.group, '9_cutcopypaste', 'copyFile should be in copy/paste group')
   })
 })
 suite('Categories', () => {

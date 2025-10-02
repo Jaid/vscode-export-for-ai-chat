@@ -67,13 +67,13 @@ suite('Functionality', () => {
     assert.ok(clipboardContent.includes('export default') || clipboardContent.includes('hi'), 'Clipboard should contain the file content')
     assert.ok(clipboardContent.includes('a/test.js') || clipboardContent.includes('a\\test.js') || clipboardContent.includes('test.js'), 'Clipboard should contain file path')
   })
-  test('copyFolder command should copy all files in folder', async function () {
+  test('copyFile command should work for folders', async function () {
     this.timeout(testTimeout)
     const {workspaceFolders} = vscode.workspace
     assert.ok(workspaceFolders && workspaceFolders.length > 0, 'Workspace should be open')
     const folderPath = path.join(workspaceFolders[0].uri.fsPath, 'a')
     const folderUri = vscode.Uri.file(folderPath)
-    await vscode.commands.executeCommand('export-for-ai-chat.copyFolder', folderUri)
+    await vscode.commands.executeCommand('export-for-ai-chat.copyFile', folderUri)
     await new Promise(resolve => setTimeout(resolve, 500))
     const clipboardContent = await vscode.env.clipboard.readText()
     assert.ok(clipboardContent.length > 0, 'Clipboard should not be empty')
@@ -101,7 +101,7 @@ suite('Functionality', () => {
     const {workspaceFolders} = vscode.workspace
     assert.ok(workspaceFolders && workspaceFolders.length > 0, 'Workspace should be open')
     const rootFolderUri = workspaceFolders[0].uri
-    await vscode.commands.executeCommand('export-for-ai-chat.copyFolder', rootFolderUri)
+    await vscode.commands.executeCommand('export-for-ai-chat.copyFile', rootFolderUri)
     await new Promise(resolve => setTimeout(resolve, 1000))
     const clipboardContent = await vscode.env.clipboard.readText()
     assert.ok(clipboardContent.length > 0, 'Clipboard should not be empty')

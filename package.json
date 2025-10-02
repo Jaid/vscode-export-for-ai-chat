@@ -39,11 +39,7 @@
       },
       {
         "command": "export-for-ai-chat.copyFile",
-        "title": "Copy file for AI chat"
-      },
-      {
-        "command": "export-for-ai-chat.copyFolder",
-        "title": "Copy folder for AI chat"
+        "title": "Copy for AI chat"
       }
     ],
     "menus": {
@@ -56,13 +52,7 @@
       "explorer/context": [
         {
           "command": "export-for-ai-chat.copyFile",
-          "group": "9_cutcopypaste",
-          "when": "explorerResourceIsFolder == false"
-        },
-        {
-          "command": "export-for-ai-chat.copyFolder",
-          "group": "9_cutcopypaste",
-          "when": "explorerResourceIsFolder"
+          "group": "9_cutcopypaste"
         }
       ]
     },
