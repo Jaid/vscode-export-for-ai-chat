@@ -15,21 +15,15 @@ type ContextItem = {
   folder?: string
   folderName?: string
   folderRelative?: string
-  isWholeFile: boolean
+  isWholeFile?: boolean
   language?: Language
   languageId?: string
 }
 
 export type Context = {
-  blankLine: '\n\n'
-  codeCloser: string
-  codeOpener: string
-  hasMultiple: boolean
   items: Array<ContextItem>
-  newline: '\n'
+  workspace?: string
   workspaceFolder?: string
-  workspaceFolderName?: string
-  workspaceName: string
 } & ContextItem
 
 type TextInputItem = {
@@ -114,25 +108,17 @@ const getContextItemFromInputItem = async (inputItem: InputItem): Promise<Contex
   }
 }
 
-export const makeContext = async (items: Arrayable<InputItem>, options: Options['parameter'] = {}): Promise<Context> => {
+export const makeContext = async (items: Arrayable<InputItem>, options?: Options['parameter']): Promise<Context> => {
   const mergedOptions: Options['merged'] = {
     ...options,
   }
   const itemsArray = lodash.castArray(items)
   const processedItems = await Promise.all(itemsArray.map(getContextItemFromInputItem))
-  const {workspaceFolders} = vscode.workspace
-  const workspaceFolder = workspaceFolders?.[0]
-  const workspaceName = workspaceFolder?.name ?? 'Unknown'
+  const workspaceFolder = vscode.workspace.workspaceFolders?.[0]
   const context: Context = {
-    codeCloser: '`' + '`' + '`',
-    codeOpener: '`' + '`' + '`',
-    newline: '\n',
-    blankLine: '\n\n',
-    hasMultiple: processedItems.length > 1,
     items: processedItems,
     workspaceFolder: workspaceFolder?.uri.fsPath,
-    workspaceFolderName: workspaceFolder?.name,
-    workspaceName,
+    workspace: vscode.workspace.name ?? workspaceFolder?.name,
     ...processedItems[0],
   }
   if (mergedOptions.modifyContext) {
