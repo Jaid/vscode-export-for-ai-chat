@@ -41,6 +41,14 @@ File: {{fileRelative}}
 </attached-file>
 {{/each}}
 ```
+### JSON
+```hbs
+{{#if isMultiple items}}
+{{json items 2}}
+{{else}}
+{{json items.[0] 2}}
+{{/if}}
+```
 
 ### Parameters
 

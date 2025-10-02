@@ -37,6 +37,9 @@ const handlebars = makeHandlebarsWithHelpers({
     const length = input.length ?? 0
     return length > 1
   },
+  json: (input, spaces: number = 2) => {
+    return JSON.stringify(input, null, spaces)
+  },
 })
 
 export const renderPrompt = async (contextOrItems: Arrayable<InputItem> | Context, options: Options['parameter'] = {}) => {
