@@ -61,9 +61,9 @@
       "properties": {
         "export-for-ai-chat.template": {
           "type": "string",
-          "default": "{{#each items}}{{#if fileRelative}}./{{fileRelative}}{{@root/blankLine}}{{/if}}{{fence code}}{{#if language.codeBlockId}}{{language.codeBlockId}}{{else}}{{languageId}}{{/if}}{{@root/newline}}{{trim code}}{{@root/newline}}{{fence code}}{{#unless @last}}{{@root/blankLine}}{{/unless}}{{/each}}",
-          "markdownDescription": "Handlebars template for the AI chat prompt. Available variables: `items` (array), `workspaceName`, `blankLine`, `newline`. Each item has: `code`, `languageId`, `language.title`, `language.codeBlockId`, `isWholeFile`, `file`, `fileName`, `fileRelative`",
-          "description": "Handlebars template for the AI chat prompt. Available variables: items (array), workspaceName, blankLine, newline. Each item has: code, languageId, language.title, language.codeBlockId, isWholeFile, file, fileName, fileRelative",
+          "default": "{{#each items}}{{#if fileRelative}}./{{fileRelative}}{{blankLine}}{{/if}}{{fence code}}{{#if language.codeBlockId}}{{language.codeBlockId}}{{else}}{{languageId}}{{/if}}{{newLine}}{{trim code}}{{newLine}}{{fence code}}{{#unless @last}}{{blankLine}}{{/unless}}{{/each}}",
+          "markdownDescription": "Handlebars template for the AI chat prompt. Available variables: `items` (array), `workspaceName`, `blankLine` (helper), `newLine` (helper). Each item has: `code`, `languageId`, `language.title`, `language.codeBlockId`, `isWholeFile`, `file`, `fileName`, `fileRelative`",
+          "description": "Handlebars template for the AI chat prompt. Available variables: items (array), workspaceName, blankLine (helper), newLine (helper). Each item has: code, languageId, language.title, language.codeBlockId, isWholeFile, file, fileName, fileRelative",
           "editPresentation": "multilineText"
         },
         "export-for-ai-chat.showNotifications": {

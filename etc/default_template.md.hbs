@@ -1,14 +1,14 @@
 {{#each items}}
 {{#if fileRelative}}
 ./{{fileRelative}}
-{{@root/blankLine}}
+{{blankLine}}
 {{/if}}
 {{fence code}}{{#if language.codeBlockId}}{{language.codeBlockId}}{{else}}{{languageId}}{{/if}}
-{{@root/newline}}
+{{newLine}}
 {{trim code}}
-{{@root/newline}}
+{{newLine}}
 {{fence code}}
 {{#unless @last}}
-{{@root/blankLine}}
+{{blankLine}}
 {{/unless}}
 {{/each}}

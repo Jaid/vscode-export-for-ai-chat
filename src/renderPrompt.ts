@@ -1,19 +1,22 @@
 import type {InputOptions} from 'more-types'
-import type {Context, InputItem} from 'src/makeContext.js'
-import type {Arrayable, Promisable} from 'type-fest'
+import type {Context} from 'src/makeContext.js'
+import type {Promisable} from 'type-fest'
 
-import * as vscode from 'vscode'
 import {makeHandlebarsWithHelpers} from 'zeug'
 
-import {makeContext} from 'src/makeContext.js'
+import {normalizeContext} from 'src/normalizeContext.js'
 
 type Options = InputOptions<{
+  defaultsType: typeof defaultOptions
   optionalOptions: {
     languageId: string
     modifyContext: (context: Context) => Promisable<Partial<Context>>
   }
 }>
 
+const defaultOptions = {
+  template: '{{code}}',
+}
 const handlebars = makeHandlebarsWithHelpers({
   trim: input => {
     return String(input).trim()
@@ -51,21 +54,21 @@ const handlebars = makeHandlebarsWithHelpers({
   json: (input, spaces: number = 2) => {
     return JSON.stringify(input, null, spaces)
   },
+  blankLine: (count: number = 1) => {
+    return '\n'.repeat(count + 1)
+  },
+  newLine: (count: number = 1) => {
+    return '\n'.repeat(count)
+  },
 })
 
-export const renderPrompt = async (contextOrItems: Arrayable<InputItem> | Context, options: Options['parameter'] = {}) => {
-  let context: Context
-  if ('items' in contextOrItems) {
-    context = contextOrItems
-  } else {
-    context = await makeContext(contextOrItems, options)
+export const renderPrompt = (context: Context, options: Options['parameter'] = {}) => {
+  const mergedOptions: Options['merged'] = {
+    ...defaultOptions,
+    ...options,
   }
-  const config = vscode.workspace.getConfiguration('export-for-ai-chat')
-  const handlebarsTemplate = config.get<string>('template')
-  if (!handlebarsTemplate) {
-    throw new Error('No handlebars template found in the “export-for-ai-chat.template” setting.')
-  }
-  const render = handlebars.compile<Context>(handlebarsTemplate)
-  const result = render(context)
+  const render = handlebars.compile<Context>(mergedOptions.template)
+  const contextNormalized = normalizeContext(context)
+  const result = render(contextNormalized)
   return result
 }
