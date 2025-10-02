@@ -71,7 +71,7 @@
       "properties": {
         "export-for-ai-chat.template": {
           "type": "string",
-          "default": "{{#each items}}{{#if fileRelative}}./{{fileRelative}}{{blankLine}}{{/if}}{{@root/codeOpener}}{{#if language.codeBlockId}}{{language.codeBlockId}}{{else}}{{languageId}}{{/if}}{{newline}}{{code}}{{newline}}{{@root/codeCloser}}{{#unless @last}}{{blankLine}}{{/unless}}{{/each}}",
+          "default": "{{#each items}}{{#if fileRelative}}./{{fileRelative}}{{@root/blankLine}}{{/if}}{{@root/codeOpener}}{{#if language.codeBlockId}}{{language.codeBlockId}}{{else}}{{languageId}}{{/if}}{{@root/newline}}{{trim code}}{{@root/newline}}{{@root/codeCloser}}{{#unless @last}}{{@root/blankLine}}{{/unless}}{{/each}}",
           "markdownDescription": "Handlebars template for the AI chat prompt. Available variables: `items` (array), `hasMultiple`, `workspaceName`, `codeOpener`, `codeCloser`, `blankLine`, `newline`. Each item has: `code`, `languageId`, `language.title`, `language.codeBlockId`, `isWholeFile`, `file`, `fileName`, `fileRelative`",
           "description": "Handlebars template for the AI chat prompt. Available variables: items (array), hasMultiple, workspaceName, codeOpener, codeCloser, blankLine, newline. Each item has: code, languageId, language.title, language.codeBlockId, isWholeFile, file, fileName, fileRelative",
           "editPresentation": "multilineText"
