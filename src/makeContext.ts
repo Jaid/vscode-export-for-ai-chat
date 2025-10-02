@@ -1,11 +1,11 @@
-import type {Language} from './languageIds.js'
 import type {InputOptions} from 'more-types'
+import type {Language} from 'src/languageIds.js'
 import type {Arrayable, Promisable} from 'type-fest'
 
 import * as lodash from 'lodash-es'
 import * as vscode from 'vscode'
 
-import {getLanguageFromLanguageId} from './languageIds.js'
+import {getLanguageFromLanguageId} from 'src/languageIds.js'
 
 type ContextItem = {
   code: string

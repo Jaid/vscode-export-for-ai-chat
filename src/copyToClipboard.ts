@@ -1,12 +1,11 @@
-import type {Context} from './renderPrompt.js'
+import type {Context} from 'src/makeContext.js'
 
 import * as vscode from 'vscode'
 import {renderHandlebars} from 'zeug'
 
 import {makeContext} from 'src/makeContext.js'
-
-import {outputChannel} from './outputChannel.js'
-import {renderPrompt} from './renderPrompt.js'
+import {outputChannel} from 'src/outputChannel.js'
+import {renderPrompt} from 'src/renderPrompt.js'
 
 export const copyPromptToClipboard = async (prompt: string, context: Context) => {
   await vscode.env.clipboard.writeText(prompt)
