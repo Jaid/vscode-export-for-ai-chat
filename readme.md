@@ -4,7 +4,7 @@ A VS Code extension that copies code, files and folders to the clipboard in a fo
 
 ## Template
 
-A Handlebars template can be [configured](vscode://settings/export-for-ai-chat.template) to customize the output format. The default template is designed for ChatGPT, but you can modify it to suit your needs. The default can be found [here](https://github.com/Jaid/vscode-export-for-ai-chat/blob/main/package.json#:~:text=export%2Dfor%2Dai%2Dchat.template).
+A Handlebars template can be [configured](vscode://settings/export-for-ai-chat.template) to customize the output format. The default template is designed for ChatGPT, but you can modify it to suit your needs. The default can be found [here](https://github.com/Jaid/vscode-export-for-ai-chat/blob/main/package.json#:~:text=export%2Dfor%2Dai%2Dchat.template). HTML escaping is disabled, which means `{{var}}` and `{{{var}}}` have the same effect.
 
 ### Current default
 
