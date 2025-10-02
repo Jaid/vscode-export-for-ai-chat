@@ -1,7 +1,5 @@
-import * as vscode from 'vscode'
-
-import {getChatPromptFromEditor} from '../getChatPrompt.js'
+import {copyEditorToClipboard} from '../copyToClipboard.js'
 
 export const copyCode = async () => {
-  await getChatPromptFromEditor()
+  await copyEditorToClipboard()
 }

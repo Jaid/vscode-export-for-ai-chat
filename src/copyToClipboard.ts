@@ -3,26 +3,10 @@ import type {Context} from './renderPrompt.js'
 import * as vscode from 'vscode'
 import {renderHandlebars} from 'zeug'
 
+import {makeContext} from 'src/makeContext.js'
+
 import {outputChannel} from './outputChannel.js'
 import {renderPrompt} from './renderPrompt.js'
-
-const buildContext = async (items: Array<{editor?: vscode.TextEditor
-  uri?: vscode.Uri}>): Promise<Context> => {
-  const {workspaceFolders} = vscode.workspace
-  const workspaceFolder = workspaceFolders?.[0]
-  const workspaceName = workspaceFolder?.name ?? 'Unknown'
-  return {
-    blankLine: '\n\n',
-    codeCloser: '`' + '`' + '`',
-    codeOpener: '`' + '`' + '`',
-    hasMultiple: items.length > 1,
-    items: [],
-    newline: '\n',
-    workspaceFolder: workspaceFolder?.uri.fsPath,
-    workspaceFolderName: workspaceFolder?.name,
-    workspaceName,
-  }
-}
 
 export const copyPromptToClipboard = async (prompt: string, context: Context) => {
   await vscode.env.clipboard.writeText(prompt)
@@ -33,20 +17,24 @@ export const copyPromptToClipboard = async (prompt: string, context: Context) =>
   })
   const config = vscode.workspace.getConfiguration('export-for-ai-chat')
   const showNotifications = config.get<boolean>('showNotifications')
+  outputChannel.appendLine(logMessage)
   if (showNotifications) {
-    // Don't await - let the notification show without blocking
     vscode.window.showInformationMessage(logMessage)
   }
-  outputChannel.appendLine(logMessage)
 }
 
-export const getChatPromptFromEditor = async (editor?: vscode.TextEditor) => {
+export const copyEditorToClipboard = async (editor?: vscode.TextEditor) => {
   const selectedEditor = editor ?? vscode.window.activeTextEditor
   if (!selectedEditor) {
     vscode.window.showErrorMessage('No active editor found')
     return
   }
-  const prompt = await renderPrompt({editor: selectedEditor})
-  const context = await buildContext([{editor: selectedEditor}])
+  const item = {editor: selectedEditor}
+  const context = await makeContext(item)
+  const prompt = await renderPrompt(context)
   await copyPromptToClipboard(prompt, context)
+}
+
+export const copyUriToClipboard = async (uri: vscode.Uri) => {
+  // TODO
 }

@@ -1,0 +1,6 @@
+{{#each items}}
+{{#if fileRelative}}./{{fileRelative}}{{/if}}
+{{codeOpener}}{{#if language.codeBlockId}}{{language.codeBlockId}}{{else}}{{languageId}}{{/if}}
+{{code}}
+{{codeCloser}}
+{{/each}}
