@@ -27,6 +27,10 @@ export const renderPrompt = async (contextOrItems: Arrayable<InputItem> | Contex
   if (!handlebarsTemplate) {
     throw new Error('No handlebars template found in the “export-for-ai-chat.template” setting.')
   }
-  const markdownCode = renderHandlebars(handlebarsTemplate, context)
+  const markdownCode = renderHandlebars(handlebarsTemplate, context, {
+    trim: input => {
+      return String(input).trim()
+    },
+  })
   return markdownCode
 }
