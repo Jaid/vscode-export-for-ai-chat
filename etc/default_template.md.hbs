@@ -1,6 +1,14 @@
 {{#each items}}
-{{#if fileRelative}}./{{fileRelative}}{{/if}}
-{{codeOpener}}{{#if language.codeBlockId}}{{language.codeBlockId}}{{else}}{{languageId}}{{/if}}
+{{#if fileRelative}}
+./{{fileRelative}}
+{{blankLine}}
+{{/if}}
+{{@root/codeOpener}}{{#if language.codeBlockId}}{{language.codeBlockId}}{{else}}{{languageId}}{{/if}}
+{{newline}}
 {{code}}
-{{codeCloser}}
+{{newline}}
+{{@root/codeCloser}}
+{{#unless @last}}
+{{blankLine}}
+{{/unless}}
 {{/each}}
