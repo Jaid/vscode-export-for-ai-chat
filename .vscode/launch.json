@@ -2,20 +2,20 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Launch Extension",
+      "request": "launch",
+      "type": "extensionHost",
       "args": [
         "--disable-extensions",
         "--extensionDevelopmentPath=${workspaceFolder}/out/bun",
         "${workspaceFolder}/private/test_project"
       ],
-      "name": "Launch Extension",
-      "preLaunchTask": "bun: build",
-      "request": "launch",
-      "type": "extensionHost"
+      "preLaunchTask": "bun: build"
     },
     {
       "name": "Extension Tests",
-      "type": "extensionHost",
       "request": "launch",
+      "type": "extensionHost",
       "args": [
         "--disable-extensions",
         "--extensionDevelopmentPath=${workspaceFolder}/out/bun",
