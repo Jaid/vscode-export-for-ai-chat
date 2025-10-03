@@ -15,7 +15,7 @@ export const copyPromptToClipboard = async (prompt: string, context: Context) =>
   const writeClipboardPromise = vscode.env.clipboard.writeText(prompt)
   let tokens: number | undefined
   const config = vscode.workspace.getConfiguration('export-for-ai-chat')
-  if (config.get<boolean>('countTokens', true)) {
+  if (config.get<boolean>('countTokens')) {
     const tiktoken = new Tiktoken(o200k_base)
     tokens = tiktoken.encode(prompt).length
   }
@@ -120,4 +120,13 @@ export const copyUriToClipboard = async (uri: Arrayable<vscode.Uri>) => {
   const context = await makeContext(items)
   const prompt = await renderUserPrompt(context)
   await copyPromptToClipboard(prompt, context)
+}
+
+export const copyToClipboard = async (uri?: vscode.Uri, selectedUris?: Array<vscode.Uri>) => {
+  const selectedUri = selectedUris?.length ? selectedUris : uri
+  if (!selectedUri) {
+    await copyEditorToClipboard()
+    return
+  }
+  await copyUriToClipboard(selectedUri)
 }
