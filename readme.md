@@ -77,7 +77,7 @@ File: {{fileRelative}}
 {{/if}}
 ```
 
-### Parameters
+### Templating variables
 
 <!-- LEGACY TABLE name|description|type|availability
 ---|---|---|---
@@ -99,3 +99,23 @@ items[].fileRelative|workspace-relative file path|string|when item is from a fil
 items[].folder|absolute folder path|string|when item represents a folder
 items[].folderName|name of the folder|string|when item represents a folder
 items[].folderRelative|workspace-relative folder path|string|when item is a folder in workspace -->
+
+#### Global
+
+name|description|type|availability
+---|---|---|---
+
+
+#### Items
+
+name|description|type|availability
+---|---|---|---
+code|the text content|string|always
+
+#### Helpers
+
+name|description|parameters
+---|---|---
+newLine|inserts newline characters|`count: number = 1`
+blankLine|inserts a blank line|`count: number = 1`
+trim|trims surrounding whitespace|`input: string`
