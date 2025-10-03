@@ -83,13 +83,24 @@ File: {{fileRelative}}
 
 name|description|type|availability
 ---|---|---|---
+items|array of context items|`Item[]`|always
+workspace|workspace name|`string`|when in a workspace
+workspaceFolder|absolute path to workspace folder|`string`|when in a workspace
 
 #### Items
 
 name|description|type|availability
 ---|---|---|---
-code|the text content|string|always
+code|the text content|`string`|always
+file|absolute file path|`string`|when item comes from a file
+fileName|name of the file|`string`|when item comes from a file
+fileRelative|relative path to file|`string`|when item comes from a file
+folder|absolute folder path|`string`|when item comes from a folder
+folderName|name of folder|`string`|when item comes from a folder
+folderRelative|relative folder path|`string`|when item comes from a folder
 isWholeFile|whether `code` is the entire file or only a selected portion|`boolean`|when item comes from a file
+language|language object with `title` and optional `codeBlockId`|`Language`|when item has a language ID
+languageId|VS Code language identifier|`string`|when item has a language ID
 
 #### Helpers
 
@@ -99,3 +110,6 @@ newLine|inserts newline characters|`count: number = 1`
 blankLine|inserts a blank line|`count: number = 1`
 trim|trims surrounding whitespace|`input: string`
 fence|inserts a Markdown code fence that is ensured to work for the given content|`code?: string`
+escapeFences|escapes code fence markers in text|`input: string`
+isMultiple|checks if an array has multiple items|`input: {length?: number}`
+json|stringifies value as JSON with formatting|`input, spaces: number = 2`
