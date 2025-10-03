@@ -10,7 +10,7 @@ const fence = (code?: string) => {
   if (!code) {
     return '```'
   }
-  const codeNormalized = code.replaceAll('\r', '\n')
+  const codeNormalized = code.replaceAll(/\r\n?/g, '\n')
   const isSafe = (candidate: string) => {
     if (codeNormalized.startsWith(candidate)) {
       return false
