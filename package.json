@@ -62,8 +62,8 @@
         "export-for-ai-chat.template": {
           "type": "string",
           "default": "{{#each items}}{{#if fileRelative}}./{{fileRelative}}{{blankLine}}{{/if}}{{fence code}}{{#if language.codeBlockId}}{{language.codeBlockId}}{{else}}{{languageId}}{{/if}}{{newLine}}{{trim code}}{{newLine}}{{fence code}}{{#unless @last}}{{blankLine}}{{/unless}}{{/each}}",
-          "markdownDescription": "Handlebars template for the AI chat prompt. Available variables: `items` (array), `workspaceName`, `blankLine` (helper), `newLine` (helper). Each item has: `code`, `languageId`, `language.title`, `language.codeBlockId`, `isWholeFile`, `file`, `fileName`, `fileRelative`",
-          "description": "Handlebars template for the AI chat prompt. Available variables: items (array), workspaceName, blankLine (helper), newLine (helper). Each item has: code, languageId, language.title, language.codeBlockId, isWholeFile, file, fileName, fileRelative",
+          "markdownDescription": "Handlebars template for the AI chat prompt. Available variables: `workspace`, `workspaceFolder`, `items` (array of context items). Each item in `items` has properties: `code`, `file`, `fileName`, `fileRelative`, `folder`, `folderName`, `folderRelative`, `isWholeFile`, `language`, `languageId`. Available helpers: `blankLine`, `newLine`, `trim`, `fence`, `escapeFences`, `isMultiple`, `json`.",
+          "description": "Handlebars template for the AI chat prompt. Available variables: workspace, workspaceFolder, items. Each item in items has properties: code, file, fileName, fileRelative, folder, folderName, folderRelative, isWholeFile, language, languageId. Available helpers: blankLine, newLine, trim, fence, escapeFences, isMultiple, json.",
           "editPresentation": "multilineText"
         },
         "export-for-ai-chat.showNotifications": {
