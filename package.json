@@ -86,6 +86,7 @@
     "test": "bun test ./test && bun run build && bun run build_test && vscode-test"
   },
   "dependencies": {
+    "js-tiktoken": "^1.0.21",
     "zeug": "^2.1.0"
   },
   "devDependencies": {

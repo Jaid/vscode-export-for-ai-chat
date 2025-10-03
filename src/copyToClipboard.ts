@@ -1,5 +1,7 @@
 import type {Context} from 'src/makeContext.js'
 
+import {Tiktoken} from 'js-tiktoken/lite'
+import o200k_base from 'js-tiktoken/ranks/o200k_base'
 import * as vscode from 'vscode'
 import {renderHandlebars} from 'zeug'
 
@@ -9,12 +11,18 @@ import {renderUserPrompt} from 'src/renderUserPrompt.js'
 
 export const copyPromptToClipboard = async (prompt: string, context: Context) => {
   await vscode.env.clipboard.writeText(prompt)
-  const logMessageTemplate = 'Copied {{#if isMultiple items}}{{items.length}} items {{#else}}{{/if}}for AI chat ({{prompt.length}} total characters).'
+  let tokens: number | undefined
+  const config = vscode.workspace.getConfiguration('export-for-ai-chat')
+  if (config.get<boolean>('showTokenCount', true)) {
+    const tiktoken = new Tiktoken(o200k_base)
+    tokens = tiktoken.encode(prompt).length
+  }
+  const logMessageTemplate = 'Copied {{#if isMultiple items}}{{items.length}} items {{#else}}{{/if}}for AI chat ({{#if tokens}}{{tokens}} tokens, {{/if}}{{prompt.length}} characters).'
   const logMessage = renderHandlebars(logMessageTemplate, {
     ...context,
     prompt,
+    tokens,
   })
-  const config = vscode.workspace.getConfiguration('export-for-ai-chat')
   const showNotifications = config.get<boolean>('showNotifications')
   outputChannel.appendLine(logMessage)
   if (showNotifications) {
