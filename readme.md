@@ -79,38 +79,17 @@ File: {{fileRelative}}
 
 ### Templating variables
 
-<!-- LEGACY TABLE name|description|type|availability
----|---|---|---
-newLine|a static newline character|string|always
-blankLine|a static newline-newline sequence|string|always
-workspaceName|name of the workspace|string|always
-workspaceFolder|absolute file system path of the workspace folder|string|when workspace is open
-workspaceFolderName|name of the workspace folder|string|when workspace is open
-items|array of exported items with their metadata|array|always
-items[].code|the code/text content|string|when item has text content
-items[].languageId|VS Code language identifier (e.g., "typescript", "javascript")|string|when language is detected
-items[].language|language object with title and codeBlockId|object|when language is mapped
-items[].language.title|human-readable language name (e.g., "TypeScript", "JavaScript")|string|when language is mapped
-items[].language.codeBlockId|identifier for markdown code blocks (e.g., "TypeScript", "TSX")|string|when language has custom code block ID
-items[].isWholeFile|whether the entire file is included (not just a selection)|boolean|always
-items[].file|absolute file system path|string|when item is from a file
-items[].fileName|name of the file with extension|string|when item is from a file
-items[].fileRelative|workspace-relative file path|string|when item is from a file in workspace
-items[].folder|absolute folder path|string|when item represents a folder
-items[].folderName|name of the folder|string|when item represents a folder
-items[].folderRelative|workspace-relative folder path|string|when item is a folder in workspace -->
-
 #### Global
 
 name|description|type|availability
 ---|---|---|---
-
 
 #### Items
 
 name|description|type|availability
 ---|---|---|---
 code|the text content|string|always
+isWholeFile|whether `code` is the entire file or only a selected portion|`boolean`|when item comes from a file
 
 #### Helpers
 
@@ -119,3 +98,4 @@ name|description|parameters
 newLine|inserts newline characters|`count: number = 1`
 blankLine|inserts a blank line|`count: number = 1`
 trim|trims surrounding whitespace|`input: string`
+fence|inserts a Markdown code fence that is ensured to work for the given content|`code?: string`
