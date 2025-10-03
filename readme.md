@@ -9,8 +9,31 @@ A Handlebars template can be [configured](vscode://settings/export-for-ai-chat.t
 ### Current default
 
 ```hbs
-Here are {{items.length}} files from a project I am currently working on:{{blankLine}}{{#each items}}{{#if fileRelative}}File: `{{fileRelative}}`{{blankLine}}{{/if}}{{#if code}}{{fence code}}{{#if language.codeBlockId}}{{language.codeBlockId}}{{else}}{{languageId}}{{/if}}{{newLine}}{{code}}{{newLine}}{{fence code}}{{/if}}{{#unless @last}}{{blankLine}}{{/unless}}{{/each}}{{blankLine}}I will ask you questions about it. Please answer in a comprehensive and teaching manner and provide in-depth knowledge and useful tips and tricks where applicable.
+{{#each items}}
+{{#if fileRelative}}
+./{{fileRelative}}
+{{blankLine}}
+{{/if}}
+{{fence code}}{{#if language.codeBlockId}}{{language.codeBlockId}}{{else}}{{languageId}}{{/if}}
+{{newLine}}
+{{trim code}}
+{{newLine}}
+{{fence code}}
+{{#unless @last}}
+{{blankLine}}
+{{/unless}}
+{{/each}}
 ```
+
+This produces results like this:
+
+````markdown
+./src/index.ts
+
+```TypeScript
+  export const foo = 'bar'
+```
+````
 
 ### Examples
 
@@ -56,7 +79,7 @@ File: {{fileRelative}}
 
 ### Parameters
 
-name|description|type|availability
+<!-- LEGACY TABLE name|description|type|availability
 ---|---|---|---
 newLine|a static newline character|string|always
 blankLine|a static newline-newline sequence|string|always
@@ -75,4 +98,4 @@ items[].fileName|name of the file with extension|string|when item is from a file
 items[].fileRelative|workspace-relative file path|string|when item is from a file in workspace
 items[].folder|absolute folder path|string|when item represents a folder
 items[].folderName|name of the folder|string|when item represents a folder
-items[].folderRelative|workspace-relative folder path|string|when item is a folder in workspace
+items[].folderRelative|workspace-relative folder path|string|when item is a folder in workspace -->
