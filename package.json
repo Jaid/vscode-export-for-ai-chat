@@ -72,7 +72,8 @@
           "default": true,
           "description": "whether to include the o200k_base token count in the notification",
           "markdownDescription": "whether to include the [o200k_base](https://github.com/dqbd/tiktoken/blob/main/js/README.md) token count in the notification"
-        }
+        },
+        "export-for-ai-chat.blacklist": {}
       }
     }
   },
