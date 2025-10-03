@@ -118,7 +118,7 @@
     "@vscode/test-electron": "^2.5.2",
     "browserslist-config-jaid-universal": "^3.0.0",
     "eslint": "^9.36.0",
-    "eslint-config-jaid": "^18.0.1",
+    "eslint-config-jaid": "^18.1.0",
     "fs-extra": "^11.3.2",
     "globby": "^15.0.0",
     "handlebars": "^4.7.8",
