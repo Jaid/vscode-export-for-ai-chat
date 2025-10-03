@@ -78,15 +78,15 @@
             "string",
             "array"
           ],
+          "items": {
+            "type": "string"
+          },
           "default": [
             "[\\\\\\/]node_modules[\\\\\\/]",
             "[\\\\\\/]\\.git[\\\\\\/]",
             "\\.(png|jpg|jpeg|gif|webp|jxl|woff|woff2|ttf|mp4|mp3|pdf|zip|tar|gz)$"
           ],
-          "description": "List of case-insensitive regular expressions to ignore when traversing a folder",
-          "items": {
-            "type": "string"
-          }
+          "description": "List of case-insensitive regular expressions to ignore when traversing a folder"
         }
       }
     }
