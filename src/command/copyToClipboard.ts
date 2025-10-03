@@ -48,48 +48,22 @@ export const copyEditorToClipboard = async (editor?: vscode.TextEditor) => {
 
 const findFilesInDirectory = async (directoryUri: vscode.Uri): Promise<Array<vscode.Uri>> => {
   const files: Array<vscode.Uri> = []
-  const excludePatterns = new Set([
-    'node_modules',
-    '.git',
-    '.vscode',
-    'out',
-    'dist',
-    'build',
-    '.next',
-    '.nuxt',
-    'coverage',
-    '.cache',
-    '.temp',
-    '.tmp',
-  ])
+  const config = vscode.workspace.getConfiguration('export-for-ai-chat')
+  const blacklistConfig = config.get<Arrayable<string>>('blacklist')
+  const blacklistPatterns = lodash.castArray(blacklistConfig ?? [])
+  const blacklistRegexes = blacklistPatterns.map(pattern => new RegExp(pattern, 'i'))
+  const isBlacklisted = (uri: vscode.Uri): boolean => {
+    const path = uri.fsPath
+    return blacklistRegexes.some(regex => regex.test(path))
+  }
   const processDirectory = async (uri: vscode.Uri) => {
     const entries = await vscode.workspace.fs.readDirectory(uri)
     for (const [name, type] of entries) {
-      if (excludePatterns.has(name)) {
+      const childUri = vscode.Uri.joinPath(uri, name)
+      if (isBlacklisted(childUri)) {
         continue
       }
-      const childUri = vscode.Uri.joinPath(uri, name)
       if (type === vscode.FileType.File) {
-        if (
-          name.endsWith('.png')
-          || name.endsWith('.jpg')
-          || name.endsWith('.jpeg')
-          || name.endsWith('.gif')
-          || name.endsWith('.ico')
-          || name.endsWith('.svg')
-          || name.endsWith('.woff')
-          || name.endsWith('.woff2')
-          || name.endsWith('.ttf')
-          || name.endsWith('.eot')
-          || name.endsWith('.mp4')
-          || name.endsWith('.mp3')
-          || name.endsWith('.pdf')
-          || name.endsWith('.zip')
-          || name.endsWith('.tar')
-          || name.endsWith('.gz')
-        ) {
-          continue
-        }
         files.push(childUri)
       } else if (type === vscode.FileType.Directory) {
         await processDirectory(childUri)
