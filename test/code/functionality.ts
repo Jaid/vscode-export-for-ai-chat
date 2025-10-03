@@ -15,7 +15,7 @@ describe('Functionality', () => {
     await extension.activate()
     assert.strictEqual(extension.isActive, true)
   })
-  it('copyCode command should copy whole file to clipboard', async function () {
+  it('copyToClipboard command should copy whole file to clipboard', async function () {
     this.timeout(testTimeout)
     const {workspaceFolders} = vscode.workspace
     assert.ok(workspaceFolders && workspaceFolders.length > 0, 'Workspace should be open')
@@ -25,7 +25,7 @@ describe('Functionality', () => {
     const editor = await vscode.window.showTextDocument(document)
     await new Promise(resolve => setTimeout(resolve, 500))
     try {
-      await vscode.commands.executeCommand('export-for-ai-chat.copyCode')
+      await vscode.commands.executeCommand('export-for-ai-chat.copyToClipboard')
     } catch (error) {
       console.error('Command execution error:', error)
       throw error
@@ -36,7 +36,7 @@ describe('Functionality', () => {
     assert.ok(clipboardContent.includes('export default') || clipboardContent.includes('hi'), 'Clipboard should contain the file content')
     assert.ok(clipboardContent.includes('JavaScript') || clipboardContent.includes('javascript'), 'Should mention the language')
   })
-  it('copyCode command should copy selected text only', async function () {
+  it('copyToClipboard command should copy selected text only', async function () {
     this.timeout(testTimeout)
     const {workspaceFolders} = vscode.workspace
     assert.ok(workspaceFolders && workspaceFolders.length > 0, 'Workspace should be open')
@@ -48,31 +48,31 @@ describe('Functionality', () => {
     // Select only part of the text
     const selection = new vscode.Selection(0, 0, 0, 6) // Select "export"
     editor.selection = selection
-    await vscode.commands.executeCommand('export-for-ai-chat.copyCode')
+    await vscode.commands.executeCommand('export-for-ai-chat.copyToClipboard')
     await new Promise(resolve => setTimeout(resolve, 500))
     const clipboardContent = await vscode.env.clipboard.readText()
     assert.ok(clipboardContent.includes('export'), 'Clipboard should contain selected text')
   })
-  it('copyFile command should copy file content', async function () {
+  it('copyToClipboard command should copy file content', async function () {
     this.timeout(testTimeout)
     const {workspaceFolders} = vscode.workspace
     assert.ok(workspaceFolders && workspaceFolders.length > 0, 'Workspace should be open')
     const testFilePath = path.join(workspaceFolders[0].uri.fsPath, 'a', 'test.js')
     const testFileUri = vscode.Uri.file(testFilePath)
-    await vscode.commands.executeCommand('export-for-ai-chat.copyFile', testFileUri)
+    await vscode.commands.executeCommand('export-for-ai-chat.copyToClipboard', testFileUri)
     await new Promise(resolve => setTimeout(resolve, 500))
     const clipboardContent = await vscode.env.clipboard.readText()
     assert.ok(clipboardContent.length > 0, 'Clipboard should not be empty')
     assert.ok(clipboardContent.includes('export default') || clipboardContent.includes('hi'), 'Clipboard should contain the file content')
     assert.ok(clipboardContent.includes('a/test.js') || clipboardContent.includes('a\\test.js') || clipboardContent.includes('test.js'), 'Clipboard should contain file path')
   })
-  it('copyFile command should work for folders', async function () {
+  it('copyToClipboard command should work for folders', async function () {
     this.timeout(testTimeout)
     const {workspaceFolders} = vscode.workspace
     assert.ok(workspaceFolders && workspaceFolders.length > 0, 'Workspace should be open')
     const folderPath = path.join(workspaceFolders[0].uri.fsPath, 'a')
     const folderUri = vscode.Uri.file(folderPath)
-    await vscode.commands.executeCommand('export-for-ai-chat.copyFile', folderUri)
+    await vscode.commands.executeCommand('export-for-ai-chat.copyToClipboard', folderUri)
     await new Promise(resolve => setTimeout(resolve, 500))
     const clipboardContent = await vscode.env.clipboard.readText()
     assert.ok(clipboardContent.length > 0, 'Clipboard should not be empty')
@@ -88,7 +88,7 @@ describe('Functionality', () => {
     const document = await vscode.workspace.openTextDocument(testFileUri)
     await vscode.window.showTextDocument(document)
     await new Promise(resolve => setTimeout(resolve, 500))
-    await vscode.commands.executeCommand('export-for-ai-chat.copyCode')
+    await vscode.commands.executeCommand('export-for-ai-chat.copyToClipboard')
     await new Promise(resolve => setTimeout(resolve, 500))
     const clipboardContent = await vscode.env.clipboard.readText()
     const codeBlockCount = (clipboardContent.match(/```/g) || []).length
@@ -100,7 +100,7 @@ describe('Functionality', () => {
     const {workspaceFolders} = vscode.workspace
     assert.ok(workspaceFolders && workspaceFolders.length > 0, 'Workspace should be open')
     const rootFolderUri = workspaceFolders[0].uri
-    await vscode.commands.executeCommand('export-for-ai-chat.copyFile', rootFolderUri)
+    await vscode.commands.executeCommand('export-for-ai-chat.copyToClipboard', rootFolderUri)
     await new Promise(resolve => setTimeout(resolve, 1000))
     const clipboardContent = await vscode.env.clipboard.readText()
     assert.ok(clipboardContent.length > 0, 'Clipboard should not be empty')
@@ -120,7 +120,7 @@ describe('Functionality', () => {
     const document = await vscode.workspace.openTextDocument(testFileUri)
     await vscode.window.showTextDocument(document)
     await new Promise(resolve => setTimeout(resolve, 500))
-    await vscode.commands.executeCommand('export-for-ai-chat.copyCode')
+    await vscode.commands.executeCommand('export-for-ai-chat.copyToClipboard')
     await new Promise(resolve => setTimeout(resolve, 500))
     const clipboardContent = await vscode.env.clipboard.readText()
     assert.ok(clipboardContent.length > 0, 'Clipboard should still work with notifications disabled')

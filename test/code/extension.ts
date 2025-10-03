@@ -1,3 +1,5 @@
+import type {Arrayable} from 'type-fest'
+
 import * as assert from 'node:assert'
 
 import * as vscode from 'vscode'
@@ -25,30 +27,25 @@ describe('Extension', () => {
 })
 describe('Commands', () => {
   let extension: vscode.Extension<any> | undefined
-  it('should register copyCode command', async () => {
+  it('should register copyToClipboard command', async () => {
     extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
     if (!extension) {
       throw new Error('Extension not found')
     }
     await extension.activate()
     const commands = await vscode.commands.getCommands(true)
-    assert.ok(commands.includes('export-for-ai-chat.copyCode'), 'copyCode command should be registered')
+    assert.ok(commands.includes('export-for-ai-chat.copyToClipboard'), 'copyToClipboard command should be registered')
   })
-  it('should register copyFile command', async () => {
-    const commands = await vscode.commands.getCommands(true)
-    assert.ok(commands.includes('export-for-ai-chat.copyFile'), 'copyFile command should be registered')
-  })
-  it('should have both commands in package.json contributes', () => {
+  it('should have command in package.json contributes', () => {
     extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
     if (!extension) {
       throw new Error('Extension not found')
     }
     const {contributes} = extension.packageJSON
     assert.ok(contributes.commands, 'Should have commands in contributes')
-    assert.strictEqual(contributes.commands.length, 2, 'Should have exactly 2 commands')
+    assert.strictEqual(contributes.commands.length, 1, 'Should have exactly 1 command')
     const commandIds = new Set(contributes.commands.map((cmd: any) => cmd.command))
-    assert.ok(commandIds.has('export-for-ai-chat.copyCode'), 'Should include copyCode')
-    assert.ok(commandIds.has('export-for-ai-chat.copyFile'), 'Should include copyFile')
+    assert.ok(commandIds.has('export-for-ai-chat.copyToClipboard'), 'Should include copyToClipboard')
   })
 })
 describe('Configuration', () => {
@@ -83,6 +80,8 @@ describe('Configuration', () => {
     const {properties} = contributes.configuration
     assert.ok(properties['export-for-ai-chat.template'], 'Should have template property')
     assert.ok(properties['export-for-ai-chat.showNotifications'], 'Should have showNotifications property')
+    assert.ok(properties['export-for-ai-chat.countTokens'], 'Should have countTokens property')
+    assert.ok(properties['export-for-ai-chat.blacklist'], 'Should have blacklist property')
   })
   it('template configuration should have correct type', () => {
     const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
@@ -100,6 +99,42 @@ describe('Configuration', () => {
     const {properties} = extension.packageJSON.contributes.configuration
     assert.strictEqual(properties['export-for-ai-chat.showNotifications'].type, 'boolean', 'showNotifications should be a boolean type')
   })
+  it('countTokens configuration should have correct type', () => {
+    const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
+    if (!extension) {
+      throw new Error('Extension not found')
+    }
+    const {properties} = extension.packageJSON.contributes.configuration
+    assert.strictEqual(properties['export-for-ai-chat.countTokens'].type, 'boolean', 'countTokens should be a boolean type')
+  })
+  it('blacklist configuration should have correct type', () => {
+    const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
+    if (!extension) {
+      throw new Error('Extension not found')
+    }
+    const {properties} = extension.packageJSON.contributes.configuration
+    assert.ok(Array.isArray(properties['export-for-ai-chat.blacklist'].type), 'blacklist should have array type')
+    assert.ok(properties['export-for-ai-chat.blacklist'].type.includes('string'), 'blacklist should include string type')
+    assert.ok(properties['export-for-ai-chat.blacklist'].type.includes('array'), 'blacklist should include array type')
+  })
+  it('should have countTokens configuration', () => {
+    const config = vscode.workspace.getConfiguration('export-for-ai-chat')
+    const countTokens = config.get<boolean>('countTokens')
+    assert.strictEqual(typeof countTokens, 'boolean', 'countTokens should be a boolean')
+  })
+  it('should have correct default value for countTokens', () => {
+    const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
+    if (!extension) {
+      throw new Error('Extension not found')
+    }
+    const configDefaults = extension.packageJSON.contributes.configuration.properties
+    assert.strictEqual(configDefaults['export-for-ai-chat.countTokens'].default, true, 'countTokens should default to true')
+  })
+  it('should have blacklist configuration', () => {
+    const config = vscode.workspace.getConfiguration('export-for-ai-chat')
+    const blacklist = config.get<Arrayable<string>>('blacklist')
+    assert.ok(Array.isArray(blacklist) || typeof blacklist === 'string', 'blacklist should be a string or array')
+  })
 })
 describe('Menus', () => {
   it('should have editor context menu contribution', () => {
@@ -111,9 +146,9 @@ describe('Menus', () => {
     assert.ok(contributes.menus, 'Should have menus in contributes')
     assert.ok(contributes.menus['editor/context'], 'Should have editor/context menu')
     const editorMenu = contributes.menus['editor/context']
-    const copyCodeMenu = editorMenu.find((m: any) => m.command === 'export-for-ai-chat.copyCode')
-    assert.ok(copyCodeMenu, 'Should have copyCode in editor context menu')
-    assert.strictEqual(copyCodeMenu.group, '9_cutcopypaste', 'Should be in copy/paste group')
+    const copyToClipboardMenu = editorMenu.find((m: any) => m.command === 'export-for-ai-chat.copyToClipboard')
+    assert.ok(copyToClipboardMenu, 'Should have copyToClipboard in editor context menu')
+    assert.strictEqual(copyToClipboardMenu.group, '9_cutcopypaste', 'Should be in copy/paste group')
   })
   it('should have explorer context menu contribution', () => {
     const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
@@ -124,9 +159,9 @@ describe('Menus', () => {
     assert.ok(contributes.menus['explorer/context'], 'Should have explorer/context menu')
     const explorerMenu = contributes.menus['explorer/context']
     assert.strictEqual(explorerMenu.length, 1, 'Should have 1 item in explorer context menu')
-    const copyFileMenu = explorerMenu.find((m: any) => m.command === 'export-for-ai-chat.copyFile')
-    assert.ok(copyFileMenu, 'Should have copyFile in explorer context menu')
-    assert.strictEqual(copyFileMenu.group, '9_cutcopypaste', 'copyFile should be in copy/paste group')
+    const copyToClipboardMenu = explorerMenu.find((m: any) => m.command === 'export-for-ai-chat.copyToClipboard')
+    assert.ok(copyToClipboardMenu, 'Should have copyToClipboard in explorer context menu')
+    assert.strictEqual(copyToClipboardMenu.group, '5_cutcopypaste', 'copyToClipboard should be in copy/paste group')
   })
 })
 describe('Categories', () => {
