@@ -13,7 +13,7 @@ export const copyPromptToClipboard = async (prompt: string, context: Context) =>
   const writeClipboardPromise = vscode.env.clipboard.writeText(prompt)
   let tokens: number | undefined
   const config = vscode.workspace.getConfiguration('export-for-ai-chat')
-  if (config.get<boolean>('showTokenCount', true)) {
+  if (config.get<boolean>('countTokens', true)) {
     const tiktoken = new Tiktoken(o200k_base)
     tokens = tiktoken.encode(prompt).length
   }
