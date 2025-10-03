@@ -5,11 +5,11 @@ import {renderHandlebars} from 'zeug'
 
 import {makeContext} from 'src/makeContext.js'
 import {outputChannel} from 'src/outputChannel.js'
-import {renderPrompt} from 'src/renderPrompt.js'
+import {renderUserPrompt} from 'src/renderUserPrompt.js'
 
 export const copyPromptToClipboard = async (prompt: string, context: Context) => {
   await vscode.env.clipboard.writeText(prompt)
-  const logMessageTemplate = 'Copied {{items.length}} item{{#if items.[1]}}s{{/if}} for AI chat ({{prompt.length}} total characters).'
+  const logMessageTemplate = 'Copied {{#if isMultiple items}}{{items.length}} items {{#else}}{{/if}}for AI chat ({{prompt.length}} total characters).'
   const logMessage = renderHandlebars(logMessageTemplate, {
     ...context,
     prompt,
@@ -30,7 +30,7 @@ export const copyEditorToClipboard = async (editor?: vscode.TextEditor) => {
   }
   const item = {editor: selectedEditor}
   const context = await makeContext(item)
-  const prompt = await renderPrompt(context)
+  const prompt = await renderUserPrompt(context)
   await copyPromptToClipboard(prompt, context)
 }
 
@@ -92,7 +92,7 @@ export const copyUriToClipboard = async (uri: vscode.Uri) => {
   const stat = await vscode.workspace.fs.stat(uri)
   if (stat.type === vscode.FileType.File) {
     const context = await makeContext({uri})
-    const prompt = await renderPrompt(context)
+    const prompt = await renderUserPrompt(context)
     await copyPromptToClipboard(prompt, context)
     return
   }
@@ -104,7 +104,7 @@ export const copyUriToClipboard = async (uri: vscode.Uri) => {
     }
     const items = files.map(fileUri => ({uri: fileUri}))
     const context = await makeContext(items)
-    const prompt = await renderPrompt(context)
+    const prompt = await renderUserPrompt(context)
     await copyPromptToClipboard(prompt, context)
     return
   }
