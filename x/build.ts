@@ -45,6 +45,6 @@ await Bun.build({
   target: 'node',
   external: ['vscode'],
   plugins: [emitPackageJsonPlugin],
-  minify: true,
-  sourcemap: 'external',
+  minify: Bun.env.NODE_ENV === 'production',
+  sourcemap: 'linked',
 })

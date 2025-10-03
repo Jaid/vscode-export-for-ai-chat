@@ -1,7 +1,9 @@
 import type {Context} from 'src/makeContext.js'
+import type {Arrayable} from 'type-fest'
 
 import {Tiktoken} from 'js-tiktoken/lite'
 import o200k_base from 'js-tiktoken/ranks/o200k_base'
+import * as lodash from 'lodash-es'
 import * as vscode from 'vscode'
 
 import {handlebars} from 'src/handlebars.js'
@@ -98,25 +100,24 @@ const findFilesInDirectory = async (directoryUri: vscode.Uri): Promise<Array<vsc
   return files
 }
 
-export const copyUriToClipboard = async (uri: vscode.Uri) => {
-  const stat = await vscode.workspace.fs.stat(uri)
-  if (stat.type === vscode.FileType.File) {
-    const context = await makeContext({uri})
-    const prompt = await renderUserPrompt(context)
-    await copyPromptToClipboard(prompt, context)
-    return
-  }
-  if (stat.type === vscode.FileType.Directory) {
-    const files = await findFilesInDirectory(uri)
-    if (!files.length) {
-      vscode.window.showWarningMessage('No files found in the selected folder')
-      return
+export const copyUriToClipboard = async (uri: Arrayable<vscode.Uri>) => {
+  const uris = lodash.castArray(uri)
+  const allFileUris: Array<vscode.Uri> = []
+  for (const singleUri of uris) {
+    const stat = await vscode.workspace.fs.stat(singleUri)
+    if (stat.type === vscode.FileType.File) {
+      allFileUris.push(singleUri)
+    } else if (stat.type === vscode.FileType.Directory) {
+      const files = await findFilesInDirectory(singleUri)
+      allFileUris.push(...files)
     }
-    const items = files.map(fileUri => ({uri: fileUri}))
-    const context = await makeContext(items)
-    const prompt = await renderUserPrompt(context)
-    await copyPromptToClipboard(prompt, context)
+  }
+  if (!allFileUris.length) {
+    vscode.window.showWarningMessage('No files found')
     return
   }
-  vscode.window.showErrorMessage('Invalid file or folder')
+  const items = allFileUris.map(fileUri => ({uri: fileUri}))
+  const context = await makeContext(items)
+  const prompt = await renderUserPrompt(context)
+  await copyPromptToClipboard(prompt, context)
 }
