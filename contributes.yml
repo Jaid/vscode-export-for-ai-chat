@@ -1,4 +1,5 @@
 yaml-language-server: $schema=https://gist.githubusercontent.com/Jaid/1196746806dc7be1eaa7783e4d7b388a/raw/extension_manifest.schema.json#properties/contributes
+yaml-language-server: $schema=https://gist.githubusercontent.com/Jaid/1196746806dc7be1eaa7783e4d7b388a/raw/extension_manifest.schema.json#properties/contributes
 commands:
 - command: export-for-ai-chat.copyToClipboard
   title: Copy for AI chat
