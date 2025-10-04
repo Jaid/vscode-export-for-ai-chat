@@ -1,4 +1,4 @@
-# vscode-export-for-ai-chat
+ # vscode-export-for-ai-chat
 
 A VS Code extension that copies code, files and folders to the clipboard in a format optimized for AI chat assistants.
 
