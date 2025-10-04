@@ -26,9 +26,15 @@ const emitPackageJsonPlugin: BunPlugin = {
         'contributes',
         'activationEvents',
         'extensionKind',
-      ])
+      ]) as PackageJson
+      const additionalContributesFile = Bun.file(path.join(rootFolder, 'contributes.yml'))
+      const additionalContributes = Bun.YAML.parse(await additionalContributesFile.text())
+      if (additionalContributes) {
+        lodash.merge(relevantPackage, {contributes: additionalContributes})
+      }
       const id = packageJson.name!.replace(/^vscode-/, '')
       const outPackage = {
+        activationEvents: [],
         ...relevantPackage,
         name: id,
         main: 'extension.js',

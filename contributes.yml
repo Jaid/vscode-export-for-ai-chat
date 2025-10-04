@@ -1,4 +1,4 @@
-# yaml-language-server: $schema= # TODO
+# yaml-language-server: $schema=https://gist.githubusercontent.com/Jaid/1196746806dc7be1eaa7783e4d7b388a/raw/extension_manifest.schema.json#properties/contributes
 commands:
 - command: export-for-ai-chat.copyToClipboard
   title: Copy for AI chat
@@ -16,10 +16,8 @@ configuration:
       type: string
       default: |-
         {{#each items}}{{#if fileRelative}}./{{fileRelative}}{{blankLine}}{{/if}}{{fence code}}{{#if language.codeBlockId}}{{language.codeBlockId}}{{else}}{{languageId}}{{/if}}{{newLine}}{{trim code}}{{newLine}}{{fence code}}{{#unless @last}}{{blankLine}}{{/unless}}{{/each}}"
-      description: |-
-        Handlebars template for the AI chat prompt. Available variables: workspace, workspaceFolder, items. Each item in items has properties: code, file, fileName, fileRelative, folder, folderName, folderRelative, isWholeFile, language, languageId. Available helpers: blankLine, newLine, trim, fence, escapeFences, isMultiple, json.
-      markdownDescription: |-
-        Handlebars template for the AI chat prompt. Available variables: `workspace`, `workspaceFolder`, `items` (array of context items). Each item in `items` has properties: `code`, `file`, `fileName`, `fileRelative`, `folder`, `folderName`, `folderRelative`, `isWholeFile`, `language`, `languageId`. Available helpers: `blankLine`, `newLine`, `trim`, `fence`, `escapeFences`, `isMultiple`, `json`.
+      description: Handlebars template for the AI chat prompt. Available variables are workspace, workspaceFolder, items. Each item in items has properties code, file, fileName, fileRelative, folder, folderName, folderRelative, isWholeFile, language, languageId. Available helpers are blankLine, newLine, trim, fence, escapeFences, isMultiple, json.
+      markdownDescription: Handlebars template for the AI chat prompt. Available variables are `workspace`, `workspaceFolder`, `items` (array of context items). Each item in `items` has properties `code`, `file`, `fileName`, `fileRelative`, `folder`, `folderName`, `folderRelative`, `isWholeFile`, `language`, `languageId`. Available helpers are `blankLine`, `newLine`, `trim`, `fence`, `escapeFences`, `isMultiple`, `json`.
       editPresentation: multilineText
     export-for-ai-chat.showNotifications:
       type: boolean
@@ -30,3 +28,14 @@ configuration:
       default: true
       description: whether to include the o200k_base token count in the notification
       markdownDescription: whether to include the [o200k_base](https://github.com/dqbd/tiktoken/blob/main/js/README.md) token count in the notification
+    export-for-ai-chat.blacklist:
+      type:
+      - string
+      - array
+      items:
+        type: string
+      default:
+      - '[\\\/]node_modules[\\\/]'
+      - '[\\\/]\\.git[\\\/]'
+      - \.(png|jpg|jpeg|gif|webp|jxl|woff|woff2|ttf|mp4|mp3|pdf|zip|tar|gz)$
+      description: list of case-insensitive regular expressions to ignore when traversing a folder
