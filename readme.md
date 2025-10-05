@@ -112,4 +112,4 @@ trim|trims surrounding whitespace|`input: string`
 fence|inserts a Markdown code fence that is ensured to work for the given content|`code?: string`
 escapeFences|escapes code fence markers in text|`input: string`
 isMultiple|checks if an array has multiple items|`input: {length?: number}`
-json|stringifies value as JSON with formatting|`input, spaces: number = 2`
+json|stringifies value as JSON with formatting|`input`, `spaces: number = 2`
