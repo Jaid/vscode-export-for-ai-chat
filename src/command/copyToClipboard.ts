@@ -6,7 +6,8 @@ import o200k_base from 'js-tiktoken/ranks/o200k_base'
 import * as lodash from 'lodash-es'
 import * as vscode from 'vscode'
 
-import {handlebars} from 'src/handlebars.js'
+import {handlebars} from 'lib/handlebars.ts'
+import {runExpression} from 'lib/runExpression.ts'
 import {makeContext} from 'src/makeContext.js'
 import {outputChannel} from 'src/outputChannel.js'
 import {renderUserPrompt} from 'src/renderUserPrompt.js'
@@ -54,28 +55,17 @@ const findFilesInDirectory = async (directoryUri: vscode.Uri): Promise<FindFiles
   const includedFiles: Array<vscode.Uri> = []
   const excludedFiles: Array<vscode.Uri> = []
   const config = vscode.workspace.getConfiguration('export-for-ai-chat')
-  const blacklistExpression = config.get<string>('blacklistExpression') ?? ''
-  const shouldExclude = (uri: vscode.Uri): boolean => {
-    if (!blacklistExpression) {
-      return true
-    }
-    const path = uri.fsPath
-    const name = uri.path.split('/').pop() ?? ''
-    const lastDotIndex = name.lastIndexOf('.')
-    const extension = lastDotIndex > 0 ? name.slice(lastDotIndex + 1).toLowerCase() : ''
+  const blacklistExpression = config.get<string>('blacklistExpression', 'return false')
+  const shouldExclude = (uri: vscode.Uri, isFile: boolean, isFolder: boolean) => {
     try {
-      const normalizeCode = (input: string) => {
-        if (/(^\s*|\W)return\s+/.test(input)) {
-          return input
-        }
-        return `return (${input})`
+      const context = {
+        fullPath: uri.fsPath,
+        isFile,
+        isFolder,
       }
-      const normalizedExpression = normalizeCode(blacklistExpression)
-      const evaluateExpression = new Function('file', 'extension', normalizedExpression) as (file: string, extension: string) => unknown
-      const result = evaluateExpression(uri.fsPath, extension)
-      return Boolean(result)
+      return runExpression(blacklistExpression, context)
     } catch (error) {
-      outputChannel.appendLine(`Error evaluating filter expression:\n${error}`)
+      outputChannel.appendLine(`Error evaluating filter expression:\n${blacklistExpression}\n${error}`)
       return true
     }
   }
@@ -83,13 +73,15 @@ const findFilesInDirectory = async (directoryUri: vscode.Uri): Promise<FindFiles
     const entries = await vscode.workspace.fs.readDirectory(uri)
     for (const [name, type] of entries) {
       const childUri = vscode.Uri.joinPath(uri, name)
-      if (shouldExclude(childUri)) {
+      const isFile = type === vscode.FileType.File
+      const isFolder = type === vscode.FileType.Directory
+      if (shouldExclude(childUri, isFile, isFolder)) {
         excludedFiles.push(childUri)
         continue
       }
-      if (type === vscode.FileType.File) {
+      if (isFile) {
         includedFiles.push(childUri)
-      } else if (type === vscode.FileType.Directory) {
+      } else if (isFolder) {
         await processDirectory(childUri)
       }
     }

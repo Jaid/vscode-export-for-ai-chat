@@ -2,7 +2,7 @@ import type {InputOptions} from 'more-types'
 import type {Context} from 'src/makeContext.js'
 import type {Promisable} from 'type-fest'
 
-import {handlebars} from 'src/handlebars.js'
+import {handlebars} from 'lib/handlebars.ts'
 import {normalizeContext} from 'src/normalizeContext.js'
 
 type Options = InputOptions<{

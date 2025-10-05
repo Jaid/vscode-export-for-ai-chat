@@ -29,7 +29,7 @@ configuration:
       markdownDescription: whether to include the [o200k_base](https://github.com/dqbd/tiktoken/blob/main/js/README.md) token count in the notification
     export-for-ai-chat.blacklistExpression:
       type: string
-      default: /[\\\/](node_modules|\.git)[\\\/]/.test(file) || /^(png|jpg|jpeg|gif|webp|jxl|woff|woff2|ttf|mp4|mp3|pdf|zip|tar|gz)$/i.test(extension)
-      description: JavaScript expression to filter files when traversing a folder with access to variables file (full path) and extension (without dot). Return true to exclude the file.
-      markdownDescription: JavaScript expression to filter files when traversing a folder with access to variables `file` (full path) and `extension` (without dot). Return `true` to exclude the file.
+      default: /[\\\/](node_modules|\.git)[\\\/]/.test(fullPath) || (isFile && /\.(png|jpg|jpeg|gif|webp|jxl|woff|woff2|ttf|mp4|mp3|pdf|zip|tar|gz)$/i.test(fullPath))
+      description: JavaScript expression to skip files and folders when traversing a folder with access to variables fullPath, isFile and isFolder. Return true to exclude the item.
+      markdownDescription: JavaScript expression to skip files and folders when traversing a folder with access to variables `fullPath`, `isFile` and `isFolder`. Return `true` to exclude the item.
       editPresentation: multilineText
