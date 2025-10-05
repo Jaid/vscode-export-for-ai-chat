@@ -45,7 +45,7 @@ This produces results like this:
 [Playground](https://handlebarsjs.com/playground.html#format=1&currentExample=%7B%22template%22%3A%22%7B%7Bcode%7D%7D%22%2C%22partials%22%3A%5B%5D%2C%22input%22%3A%22%7B%5Cn%20%20code%3A%20'export%20default%201'%5Cn%7D%5Cn%22%2C%22output%22%3A%22export%20default%201%22%2C%22preparationScript%22%3A%22%22%2C%22handlebarsVersion%22%3A%224.7.8%22%7D)
 
 > [!NOTE]
-> Using the `items[]` properties as top-level parameters works in general, but don't forget it may lead to missing content for multi-item exports.
+> Using the `items[].*` properties as top-level parameters works in general, but don't forget it may cause missing content for multi-item exports.
 
 #### Markdown with file names, code fences and language indicators
 
