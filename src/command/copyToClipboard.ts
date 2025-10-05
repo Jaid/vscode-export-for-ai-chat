@@ -46,50 +46,81 @@ export const copyEditorToClipboard = async (editor?: vscode.TextEditor) => {
   await copyPromptToClipboard(prompt, context)
 }
 
-const findFilesInDirectory = async (directoryUri: vscode.Uri): Promise<Array<vscode.Uri>> => {
-  const files: Array<vscode.Uri> = []
+type FindFilesResult = {
+  excluded: Array<vscode.Uri>
+  included: Array<vscode.Uri>
+}
+const findFilesInDirectory = async (directoryUri: vscode.Uri): Promise<FindFilesResult> => {
+  const includedFiles: Array<vscode.Uri> = []
+  const excludedFiles: Array<vscode.Uri> = []
   const config = vscode.workspace.getConfiguration('export-for-ai-chat')
-  const blacklistConfig = config.get<Arrayable<string>>('blacklist')
-  const blacklistPatterns = lodash.castArray(blacklistConfig ?? [])
-  const blacklistRegexes = blacklistPatterns.map(pattern => new RegExp(pattern, 'i'))
-  const isBlacklisted = (uri: vscode.Uri): boolean => {
+  const blacklistExpression = config.get<string>('blacklistExpression') ?? ''
+  const shouldExclude = (uri: vscode.Uri): boolean => {
+    if (!blacklistExpression) {
+      return true
+    }
     const path = uri.fsPath
-    return blacklistRegexes.some(regex => regex.test(path))
+    const name = uri.path.split('/').pop() ?? ''
+    const lastDotIndex = name.lastIndexOf('.')
+    const extension = lastDotIndex > 0 ? name.slice(lastDotIndex + 1).toLowerCase() : ''
+    try {
+      const normalizeCode = (input: string) => {
+        if (/(^\s*|\W)return\s+/.test(input)) {
+          return input
+        }
+        return `return (${input})`
+      }
+      const normalizedExpression = normalizeCode(blacklistExpression)
+      const evaluateExpression = new Function('file', 'extension', normalizedExpression) as (file: string, extension: string) => unknown
+      const result = evaluateExpression(uri.fsPath, extension)
+      return Boolean(result)
+    } catch (error) {
+      outputChannel.appendLine(`Error evaluating filter expression:\n${error}`)
+      return true
+    }
   }
   const processDirectory = async (uri: vscode.Uri) => {
     const entries = await vscode.workspace.fs.readDirectory(uri)
     for (const [name, type] of entries) {
       const childUri = vscode.Uri.joinPath(uri, name)
-      if (isBlacklisted(childUri)) {
+      if (shouldExclude(childUri)) {
+        excludedFiles.push(childUri)
         continue
       }
       if (type === vscode.FileType.File) {
-        files.push(childUri)
+        includedFiles.push(childUri)
       } else if (type === vscode.FileType.Directory) {
         await processDirectory(childUri)
       }
     }
   }
   await processDirectory(directoryUri)
-  return files
+  return {
+    included: includedFiles,
+    excluded: excludedFiles,
+  }
 }
 
 export const copyUriToClipboard = async (uri: Arrayable<vscode.Uri>) => {
   const uris = lodash.castArray(uri)
   const allFileUris: Array<vscode.Uri> = []
+  let excludedCount = 0
   for (const singleUri of uris) {
     const stat = await vscode.workspace.fs.stat(singleUri)
     if (stat.type === vscode.FileType.File) {
       allFileUris.push(singleUri)
     } else if (stat.type === vscode.FileType.Directory) {
       const files = await findFilesInDirectory(singleUri)
-      allFileUris.push(...files)
+      allFileUris.push(...files.included)
+      excludedCount += files.excluded.length
     }
   }
   if (!allFileUris.length) {
     vscode.window.showWarningMessage('No files found')
     return
   }
+  const totalFiles = allFileUris.length + excludedCount
+  outputChannel.appendLine(`Selected ${allFileUris.length}/${totalFiles} traversed files`)
   const items = allFileUris.map(fileUri => ({uri: fileUri}))
   const context = await makeContext(items)
   const prompt = await renderUserPrompt(context)

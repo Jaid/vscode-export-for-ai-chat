@@ -1,5 +1,4 @@
-yaml-language-server: $schema=https://gist.githubusercontent.com/Jaid/1196746806dc7be1eaa7783e4d7b388a/raw/extension_manifest.schema.json#properties/contributes
-yaml-language-server: $schema=https://gist.githubusercontent.com/Jaid/1196746806dc7be1eaa7783e4d7b388a/raw/extension_manifest.schema.json#properties/contributes
+# yaml-language-server: $schema=https://gist.githubusercontent.com/Jaid/1196746806dc7be1eaa7783e4d7b388a/raw/extension_manifest.schema.json#properties/contributes
 commands:
 - command: export-for-ai-chat.copyToClipboard
   title: Copy for AI chat
@@ -28,14 +27,9 @@ configuration:
       default: true
       description: whether to include the o200k_base token count in the notification
       markdownDescription: whether to include the [o200k_base](https://github.com/dqbd/tiktoken/blob/main/js/README.md) token count in the notification
-    export-for-ai-chat.blacklist:
-      type:
-      - string
-      - array
-      items:
-        type: string
-      default:
-      - '[\\\/]node_modules[\\\/]'
-      - '[\\\/]\\.git[\\\/]'
-      - \.(png|jpg|jpeg|gif|webp|jxl|woff|woff2|ttf|mp4|mp3|pdf|zip|tar|gz)$
-      description: list of case-insensitive regular expressions to ignore when traversing a folder
+    export-for-ai-chat.blacklistExpression:
+      type: string
+      default: /[\\\/](node_modules|\.git)[\\\/]/.test(file) || /^(png|jpg|jpeg|gif|webp|jxl|woff|woff2|ttf|mp4|mp3|pdf|zip|tar|gz)$/i.test(extension)
+      description: JavaScript expression to filter files when traversing a folder with access to variables file (full path) and extension (without dot). Return true to exclude the file.
+      markdownDescription: JavaScript expression to filter files when traversing a folder with access to variables `file` (full path) and `extension` (without dot). Return `true` to exclude the file.
+      editPresentation: multilineText
