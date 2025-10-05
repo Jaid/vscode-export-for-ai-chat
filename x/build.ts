@@ -5,6 +5,7 @@ import * as path from 'forward-slash-path'
 import * as lodash from 'lodash-es'
 
 const rootFolder = path.resolve(import.meta.dirname, '..')
+const outputFolder = path.join(rootFolder, 'out', 'bun')
 const packageJsonPath = path.join(rootFolder, 'package.json')
 const packageJson = await Bun.file(packageJsonPath).json() as PackageJson
 const emitPackageJsonPlugin: BunPlugin = {
@@ -43,14 +44,23 @@ const emitPackageJsonPlugin: BunPlugin = {
         main: 'extension.js',
         publisher: 'jaidchen',
       }
-      const packageJsonFile = path.join(rootFolder, 'out', 'bun', 'package.json')
+      if (Bun.env.NODE_ENV === 'production') {
+        const iconFile = path.join(rootFolder, 'icon.jxl')
+        const iconFileExists = await Bun.file(iconFile).exists()
+        if (iconFileExists) {
+          // @ts-expect-error TS2339
+          outPackage.icon = 'icon.png'
+          await Bun.$`magick ${iconFile} -resize '128x128>' png:- | oxipng --alpha --zopfli --opt max --out ${path.join(outputFolder, 'icon.png')} -`
+        }
+      }
+      const packageJsonFile = path.join(outputFolder, 'package.json')
       await Bun.write(packageJsonFile, JSON.stringify(outPackage))
     })
   },
 }
 await Bun.build({
   entrypoints: [path.join(rootFolder, 'src', 'extension.ts')],
-  outdir: path.join(rootFolder, 'out', 'bun'),
+  outdir: outputFolder,
   target: 'node',
   external: ['vscode'],
   plugins: [emitPackageJsonPlugin],
