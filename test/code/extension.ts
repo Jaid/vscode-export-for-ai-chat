@@ -79,7 +79,7 @@ describe('Configuration', () => {
     assert.ok(properties['export-for-ai-chat.template'], 'Should have template property')
     assert.ok(properties['export-for-ai-chat.showNotifications'], 'Should have showNotifications property')
     assert.ok(properties['export-for-ai-chat.countTokens'], 'Should have countTokens property')
-    assert.ok(properties['export-for-ai-chat.filterExpression'], 'Should have filterExpression property')
+    assert.ok(properties['export-for-ai-chat.blacklistExpression'], 'Should have blacklistExpression property')
   })
   it('template configuration should have correct type', () => {
     const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
@@ -105,13 +105,13 @@ describe('Configuration', () => {
     const {properties} = extension.packageJSON.contributes.configuration
     assert.strictEqual(properties['export-for-ai-chat.countTokens'].type, 'boolean', 'countTokens should be a boolean type')
   })
-  it('filterExpression configuration should have correct type', () => {
+  it('blacklistExpression configuration should have correct type', () => {
     const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
     if (!extension) {
       throw new Error('Extension not found')
     }
     const {properties} = extension.packageJSON.contributes.configuration
-    assert.strictEqual(properties['export-for-ai-chat.filterExpression'].type, 'string', 'filterExpression should be a string type')
+    assert.strictEqual(properties['export-for-ai-chat.blacklistExpression'].type, 'string', 'blacklistExpression should be a string type')
   })
   it('should have countTokens configuration', () => {
     const config = vscode.workspace.getConfiguration('export-for-ai-chat')
@@ -126,10 +126,10 @@ describe('Configuration', () => {
     const configDefaults = extension.packageJSON.contributes.configuration.properties
     assert.strictEqual(configDefaults['export-for-ai-chat.countTokens'].default, true, 'countTokens should default to true')
   })
-  it('should have filterExpression configuration', () => {
+  it('should have blacklistExpression configuration', () => {
     const config = vscode.workspace.getConfiguration('export-for-ai-chat')
-    const filterExpression = config.get<string>('filterExpression')
-    assert.strictEqual(typeof filterExpression, 'string', 'filterExpression should be a string')
+    const blacklistExpression = config.get<string>('blacklistExpression')
+    assert.strictEqual(typeof blacklistExpression, 'string', 'blacklistExpression should be a string')
   })
 })
 describe('Menus', () => {
