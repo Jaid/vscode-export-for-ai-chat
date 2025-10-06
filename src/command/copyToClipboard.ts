@@ -127,29 +127,22 @@ export const copyUriToClipboard = async (uri: Arrayable<vscode.Uri>) => {
 }
 
 type CommandArgs = [
-  undefined,
-  undefined,
+  // Invoked from command palette
 ] | [
-  uri: vscode.TextEditor,
-  undefined,
+  // Invoked from editor context menu
+  vscode.Uri,
 ] | [
-  uri: vscode.Uri,
-  selectedUris: Array<vscode.Uri>,
-] | [
-  uri: vscode.Uri,
-  undefined,
+  // Invoked from explorer context menu
+  vscode.Uri,
+  Array<vscode.Uri>,
 ]
 
 export const copyToClipboard = async (...args: CommandArgs) => {
-  const [uri, selectedUris] = args
-  if (!uri) {
+  const [target, explorerSelection] = args
+  if (!target || !explorerSelection) {
     await copyEditorToClipboard()
     return
   }
-  if ('document' in uri) {
-    await copyEditorToClipboard(uri)
-    return
-  }
-  const selectedUri = selectedUris?.length ? selectedUris : uri
+  const selectedUri = explorerSelection.length ? explorerSelection : target
   await copyUriToClipboard(selectedUri)
 }
