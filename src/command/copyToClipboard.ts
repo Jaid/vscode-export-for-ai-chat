@@ -7,16 +7,16 @@ import * as lodash from 'lodash-es'
 import * as vscode from 'vscode'
 
 import {handlebars} from 'lib/handlebars.ts'
-import {runExpression} from 'lib/runExpression.ts'
+import {extensionConfig} from 'src/Configuration.js'
 import {makeContext} from 'src/makeContext.js'
-import {outputChannel} from 'src/outputChannel.js'
+import {outputChannel} from 'src/outputChannel.ts'
 import {renderUserPrompt} from 'src/renderUserPrompt.js'
 
 export const copyPromptToClipboard = async (prompt: string, context: Context) => {
+  const startTime = performance.now()
   const writeClipboardPromise = vscode.env.clipboard.writeText(prompt)
   let tokens: number | undefined
-  const config = vscode.workspace.getConfiguration('export-for-ai-chat')
-  if (config.get<boolean>('countTokens')) {
+  if (extensionConfig.countTokens) {
     const tiktoken = new Tiktoken(o200k_base)
     tokens = tiktoken.encode(prompt).length
   }
@@ -28,10 +28,23 @@ export const copyPromptToClipboard = async (prompt: string, context: Context) =>
     tokens,
   })
   await writeClipboardPromise
-  outputChannel.appendLine(logMessage)
-  const showNotifications = config.get<boolean>('showNotifications')
-  if (showNotifications) {
-    vscode.window.showInformationMessage(logMessage)
+  const endTime = performance.now()
+  outputChannel.appendLine(`Done in ${(endTime - startTime).toFixed(1)} ms: ${logMessage}`)
+  if (extensionConfig.showNotifications) {
+    const showNotification = async () => {
+      const selection = await vscode.window.showInformationMessage(logMessage, 'Okay', 'Open', 'Don’t show again')
+      if (selection === 'Open') {
+        const newDocument = await vscode.workspace.openTextDocument({
+          content: prompt,
+          language: 'markdown',
+        })
+        await vscode.window.showTextDocument(newDocument, {preview: false})
+      }
+      if (selection === 'Don’t show again') {
+        extensionConfig.showNotifications = false
+      }
+    }
+    showNotification()
   }
 }
 
@@ -54,20 +67,12 @@ type FindFilesResult = {
 const findFilesInDirectory = async (directoryUri: vscode.Uri): Promise<FindFilesResult> => {
   const includedFiles: Array<vscode.Uri> = []
   const excludedFiles: Array<vscode.Uri> = []
-  const config = vscode.workspace.getConfiguration('export-for-ai-chat')
-  const blacklistExpression = config.get<string>('blacklistExpression', 'return false')
   const shouldExclude = (uri: vscode.Uri, isFile: boolean, isFolder: boolean) => {
-    try {
-      const context = {
-        fullPath: uri.fsPath,
-        isFile,
-        isFolder,
-      }
-      return runExpression(blacklistExpression, context)
-    } catch (error) {
-      outputChannel.appendLine(`Error evaluating filter expression:\n${blacklistExpression}\n${error}`)
-      return true
-    }
+    return extensionConfig.blacklistExpression({
+      fullPath: uri.fsPath,
+      isFile,
+      isFolder,
+    })
   }
   const processDirectory = async (uri: vscode.Uri) => {
     const entries = await vscode.workspace.fs.readDirectory(uri)
@@ -94,6 +99,7 @@ const findFilesInDirectory = async (directoryUri: vscode.Uri): Promise<FindFiles
 }
 
 export const copyUriToClipboard = async (uri: Arrayable<vscode.Uri>) => {
+  const startTime = performance.now()
   const uris = lodash.castArray(uri)
   const allFileUris: Array<vscode.Uri> = []
   let excludedCount = 0
@@ -112,18 +118,39 @@ export const copyUriToClipboard = async (uri: Arrayable<vscode.Uri>) => {
     return
   }
   const totalFiles = allFileUris.length + excludedCount
-  outputChannel.appendLine(`Selected ${allFileUris.length}/${totalFiles} traversed files`)
+  const endTime = performance.now()
+  outputChannel.appendLine(`Selected ${allFileUris.length}/${totalFiles} traversed files in ${(endTime - startTime).toFixed(1)} ms`)
   const items = allFileUris.map(fileUri => ({uri: fileUri}))
   const context = await makeContext(items)
   const prompt = await renderUserPrompt(context)
   await copyPromptToClipboard(prompt, context)
 }
 
-export const copyToClipboard = async (uri?: vscode.Uri, selectedUris?: Array<vscode.Uri>) => {
-  const selectedUri = selectedUris?.length ? selectedUris : uri
-  if (!selectedUri) {
+type CommandArgs = [
+  undefined,
+  undefined,
+] | [
+  uri: vscode.TextEditor,
+  undefined,
+] | [
+  uri: vscode.Uri,
+  selectedUris: Array<vscode.Uri>,
+] | [
+  uri: vscode.Uri,
+  undefined,
+]
+
+export const copyToClipboard = async (...args: CommandArgs) => {
+  const [uri, selectedUris] = args
+  debugger
+  if (!uri) {
     await copyEditorToClipboard()
     return
   }
+  if ('document' in uri) {
+    await copyEditorToClipboard(uri)
+    return
+  }
+  const selectedUri = selectedUris?.length ? selectedUris : uri
   await copyUriToClipboard(selectedUri)
 }

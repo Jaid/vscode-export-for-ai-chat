@@ -38,6 +38,7 @@
     "build_test": "fse emptyDir out/test && bun build test/code/*.ts --outdir out/test --target node --format cjs --entry-naming [name].test.cjs --external vscode",
     "clean": "fse remove out && fse remove temp && fse remove .vscode-test",
     "pack": "fse emptyDir out/vsix && NODE_ENV=production bun run build && cp license.txt out/bun && cd out/bun && vsce package --out ../vsix/$npm_package_name-v$npm_package_version.vsix",
+    "start": "bun run build && code --verbose --disable-extensions --extensionDevelopmentPath=$npm_config_local_prefix/out/bun",
     "test": "bun test ./test",
     "test_integration": "bun run build && bun run build_test && vscode-test",
     "use": "bun run pack && code --install-extension out/vsix/$npm_package_name-v$npm_package_version.vsix"
