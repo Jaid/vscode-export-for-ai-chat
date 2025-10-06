@@ -4,9 +4,41 @@ import type {PackageJson} from 'type-fest'
 import * as path from 'forward-slash-path'
 import * as lodash from 'lodash-es'
 
+import mapDeep from 'lib/mapDeep.ts'
+
 const rootFolder = path.resolve(import.meta.dirname, '..')
 const outputFolder = path.join(rootFolder, 'out', 'bun')
-const preparePackageJson = async (inputPackageJson: PackageJson) => {
+const inputPackageJsonFile = path.join(rootFolder, 'package.json')
+const inputPackageJson = await Bun.file(inputPackageJsonFile).json() as PackageJson
+const extensionId = inputPackageJson.name!.replace(/^vscode-/, '')
+const normalizeContributes = (inputContributes: Dict<any>) => {
+  const prefixWithId = (key: string) => {
+    if (key.startsWith(`${extensionId}.`)) {
+      return key
+    }
+    return `${extensionId}.${key}`
+  }
+  const outputContributes = mapDeep(inputContributes, (key, value, {rename, renameAndVisit, unchanged}) => {
+    if (typeof value === 'string' && (key.match('commands', /^\d+$/, 'command') || key.match('menus', /^\d+$/, 'command'))) {
+      return prefixWithId(value)
+    }
+    if (key.match('configuration', 'properties', true)) {
+      const thisKey = key.node()
+      if (!thisKey.startsWith(extensionId)) {
+        return renameAndVisit(prefixWithId(thisKey))
+      }
+    }
+    if (key.match('configuration', 'properties', true, 'description') && typeof value === 'string' && /(`|\]\(http)/.test(value)) {
+      return rename('markdownDescription', value.replaceAll('\n', '  \n'))
+    }
+    return unchanged
+  })
+  if (outputContributes.configuration) {
+    outputContributes.configuration.title = inputPackageJson.displayName || inputPackageJson.name
+  }
+  return outputContributes
+}
+const preparePackageJson = async () => {
   const relevantPackage = lodash.pick(inputPackageJson, [
     'type',
     'repository',
@@ -25,21 +57,19 @@ const preparePackageJson = async (inputPackageJson: PackageJson) => {
   if (additionalContributesExists) {
     const additionalContributes = Bun.YAML.parse(await additionalContributesFile.text())
     if (additionalContributes) {
-      lodash.merge(relevantPackage, {contributes: additionalContributes})
+      const normalizedContributes = normalizeContributes(additionalContributes)
+      lodash.merge(relevantPackage, {contributes: normalizedContributes})
     }
   }
-  const id = inputPackageJson.name!.replace(/^vscode-/, '')
   return {
     activationEvents: [],
     ...relevantPackage,
-    name: id,
+    name: extensionId,
     main: 'extension.js',
     publisher: 'jaidchen',
   }
 }
-const inputPackageJsonFile = path.join(rootFolder, 'package.json')
-const inputPackageJson = await Bun.file(inputPackageJsonFile).json() as PackageJson
-const outputPackageJson = await preparePackageJson(inputPackageJson) as PackageJson
+const outputPackageJson = await preparePackageJson() as PackageJson
 const emitPackageJsonPlugin: BunPlugin = {
   name: 'EmitPackageJsonPlugin',
   setup(build) {
