@@ -142,7 +142,6 @@ type CommandArgs = [
 
 export const copyToClipboard = async (...args: CommandArgs) => {
   const [uri, selectedUris] = args
-  debugger
   if (!uri) {
     await copyEditorToClipboard()
     return
