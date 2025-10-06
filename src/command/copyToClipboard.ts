@@ -16,7 +16,7 @@ export const copyPromptToClipboard = async (prompt: string, context: Context) =>
   const startTime = performance.now()
   const writeClipboardPromise = vscode.env.clipboard.writeText(prompt)
   let tokens: number | undefined
-  if (extensionConfig.countTokens) {
+  if (extensionConfig.tokenizer === 'o200k_base') {
     const tiktoken = new Tiktoken(o200k_base)
     tokens = tiktoken.encode(prompt).length
   }

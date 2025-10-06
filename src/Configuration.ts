@@ -16,9 +16,6 @@ class Configuration {
     }
     return this.getFunction<Context, boolean>('blacklistExpression', ['fullPath', 'isFile', 'isFolder'])
   }
-  get countTokens() {
-    return this.getBoolean('countTokens')
-  }
   get showNotifications() {
     return this.getBoolean('showNotifications')
   }
@@ -27,6 +24,9 @@ class Configuration {
   }
   get template() {
     return this.getString('template')
+  }
+  get tokenizer() {
+    return this.getValue<'o200k_base' | false>('tokenizer')
   }
   getBoolean(section: string) {
     return this.getValue<boolean>(section)

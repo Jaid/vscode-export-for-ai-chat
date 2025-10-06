@@ -78,7 +78,7 @@ describe('Configuration', () => {
     const {properties} = contributes.configuration
     assert.ok(properties['export-for-ai-chat.template'], 'Should have template property')
     assert.ok(properties['export-for-ai-chat.showNotifications'], 'Should have showNotifications property')
-    assert.ok(properties['export-for-ai-chat.countTokens'], 'Should have countTokens property')
+    assert.ok(properties['export-for-ai-chat.tokenizer'], 'Should have tokenizer property')
     assert.ok(properties['export-for-ai-chat.blacklistExpression'], 'Should have blacklistExpression property')
   })
   it('template configuration should have correct type', () => {
@@ -97,13 +97,19 @@ describe('Configuration', () => {
     const {properties} = extension.packageJSON.contributes.configuration
     assert.strictEqual(properties['export-for-ai-chat.showNotifications'].type, 'boolean', 'showNotifications should be a boolean type')
   })
-  it('countTokens configuration should have correct type', () => {
+  it('tokenizer configuration should have correct type', () => {
     const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
     if (!extension) {
       throw new Error('Extension not found')
     }
     const {properties} = extension.packageJSON.contributes.configuration
-    assert.strictEqual(properties['export-for-ai-chat.countTokens'].type, 'boolean', 'countTokens should be a boolean type')
+    const tokenizerProperty = properties['export-for-ai-chat.tokenizer']
+    assert.ok(Array.isArray(tokenizerProperty.type), 'tokenizer type should be an array')
+    assert.ok(tokenizerProperty.type.includes('string'), 'tokenizer should allow string type')
+    assert.ok(tokenizerProperty.type.includes('boolean'), 'tokenizer should allow boolean type')
+    assert.ok(Array.isArray(tokenizerProperty.enum), 'tokenizer should have enum values')
+    assert.ok(tokenizerProperty.enum.includes('o200k_base'), 'tokenizer should allow o200k_base')
+    assert.ok(tokenizerProperty.enum.includes(false), 'tokenizer should allow false')
   })
   it('blacklistExpression configuration should have correct type', () => {
     const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
@@ -113,18 +119,18 @@ describe('Configuration', () => {
     const {properties} = extension.packageJSON.contributes.configuration
     assert.strictEqual(properties['export-for-ai-chat.blacklistExpression'].type, 'string', 'blacklistExpression should be a string type')
   })
-  it('should have countTokens configuration', () => {
+  it('should have tokenizer configuration', () => {
     const config = vscode.workspace.getConfiguration('export-for-ai-chat')
-    const countTokens = config.get<boolean>('countTokens')
-    assert.strictEqual(typeof countTokens, 'boolean', 'countTokens should be a boolean')
+    const tokenizer = config.get<'o200k_base' | false>('tokenizer')
+    assert.ok(tokenizer === 'o200k_base' || tokenizer === false, 'tokenizer should be o200k_base or false')
   })
-  it('should have correct default value for countTokens', () => {
+  it('should have correct default value for tokenizer', () => {
     const extension = vscode.extensions.getExtension('jaidchen.export-for-ai-chat')
     if (!extension) {
       throw new Error('Extension not found')
     }
     const configDefaults = extension.packageJSON.contributes.configuration.properties
-    assert.strictEqual(configDefaults['export-for-ai-chat.countTokens'].default, true, 'countTokens should default to true')
+    assert.strictEqual(configDefaults['export-for-ai-chat.tokenizer'].default, 'o200k_base', 'tokenizer should default to o200k_base')
   })
   it('should have blacklistExpression configuration', () => {
     const config = vscode.workspace.getConfiguration('export-for-ai-chat')
