@@ -56,50 +56,52 @@ type ProcessResult = {
 }
 
 // ============================================================================
-// Path Formatting Helpers
+// Path Formatting Helpers (Optimized)
 // ============================================================================
 
 const formatSimplePath = (pathParts: Array<PathSegment>): string => {
-  return pathParts.map((part, index) => {
-    return index === 0 ? part.key : `.${part.key}`
-  }).join('')
-}
-const formatLodashPath = (pathParts: Array<PathSegment>): string => {
-  return pathParts.map((part, index) => {
-    if (part.isArray) {
-      return `[${part.key}]`
-    }
-    return index === 0 ? part.key : `.${part.key}`
-  }).join('')
-}
-const formatArrayPath = (pathParts: Array<PathSegment>): string => {
-  return pathParts.map(part => {
-    if (part.isArray) {
-      return `[${part.key}]`
-    }
-    return `['${part.key}']`
-  }).join('')
-}
-const getNodeKey = (pathParts: Array<PathSegment>): string => {
   if (pathParts.length === 0) {
     return ''
   }
-  return pathParts.at(-1)!.key
+  let result = pathParts[0].key
+  for (let i = 1; i < pathParts.length; i++) {
+    result += `.${pathParts[i].key}`
+  }
+  return result
 }
-const getParentKey = (pathParts: Array<PathSegment>): string => {
-  if (pathParts.length < 2) {
+const formatLodashPath = (pathParts: Array<PathSegment>): string => {
+  if (pathParts.length === 0) {
     return ''
   }
-  return pathParts.at(-2)!.key
+  let result = pathParts[0].key
+  for (let i = 1; i < pathParts.length; i++) {
+    const part = pathParts[i]
+    result += part.isArray ? `[${part.key}]` : `.${part.key}`
+  }
+  return result
+}
+const formatArrayPath = (pathParts: Array<PathSegment>): string => {
+  let result = ''
+  for (const part of pathParts) {
+    result += part.isArray ? `[${part.key}]` : `['${part.key}']`
+  }
+  return result
+}
+const getNodeKey = (pathParts: Array<PathSegment>): string => {
+  return pathParts.length === 0 ? '' : pathParts.at(-1)!.key
+}
+const getParentKey = (pathParts: Array<PathSegment>): string => {
+  return pathParts.length < 2 ? '' : pathParts.at(-2)!.key
 }
 const getParentsPath = (pathParts: Array<PathSegment>): string => {
   if (pathParts.length <= 1) {
     return ''
   }
-  return pathParts.slice(0, -1).map((part, index) => {
-    return index === 0 ? part.key : `.${part.key}`
-  })
-    .join('')
+  let result = pathParts[0].key
+  for (let i = 1; i < pathParts.length - 1; i++) {
+    result += `.${pathParts[i].key}`
+  }
+  return result
 }
 
 // ============================================================================
@@ -154,18 +156,40 @@ const matchPattern = (pathParts: Array<PathSegment>,
   return matchFrom(0, 0)
 }
 const matchStartsWith = (pathParts: Array<PathSegment>, segments: Array<string>): boolean => {
-  return matchPattern(pathParts, [...segments, matchAnySegments])
+  // Optimized: avoid array allocation by checking prefix match first
+  if (segments.length > pathParts.length) {
+    return false
+  }
+  for (const [i, segment] of segments.entries()) {
+    if (pathParts[i].key !== segment) {
+      return false
+    }
+  }
+  return true
 }
 const matchEndsWith = (pathParts: Array<PathSegment>, segments: Array<string>): boolean => {
-  return matchPattern(pathParts, [matchAnySegments, ...segments])
+  // Optimized: avoid array allocation by checking suffix match
+  if (segments.length > pathParts.length) {
+    return false
+  }
+  const offset = pathParts.length - segments.length
+  for (const [i, segment] of segments.entries()) {
+    if (pathParts[offset + i].key !== segment) {
+      return false
+    }
+  }
+  return true
 }
 
 // ============================================================================
-// KeyObject Builder
+// KeyObject Builder (Optimized)
 // ============================================================================
 // eslint-disable-next-line stylistic/padding-line-between-statements
 const buildKeyObject = (pathParts: Array<PathSegment>): KeyObject => {
-  const result = [...pathParts] as KeyObject
+  // Optimization: Avoid spreading array and creating methods unnecessarily
+  // Just extend the array with methods directly
+  const result = pathParts as KeyObject
+  // Assign methods directly (they capture pathParts in closure)
   result.toString = () => formatSimplePath(pathParts)
   result.toLodash = () => formatLodashPath(pathParts)
   result.toArray = () => formatArrayPath(pathParts)
