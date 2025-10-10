@@ -19,7 +19,7 @@ const normalizeContributes = (inputContributes: Dict<any>) => {
     return `${extensionId}.${key}`
   }
   const outputContributes = mapDeep(inputContributes, (key, value, {rename, renameAndVisit, unchanged}) => {
-    if (typeof value === 'string' && (key.match('commands', /^\d+$/, 'command') || key.match('menus', /^\d+$/, 'command'))) {
+    if (typeof value === 'string' && (key.match('commands', /^\d+$/, 'command') || key.match('menus', matchAnySegment, /^\d+$/, 'command'))) {
       return prefixWithId(value)
     }
     if (key.match('configuration', 'properties', matchAnySegment)) {
